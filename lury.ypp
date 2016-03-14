@@ -1,0 +1,767 @@
+%{
+
+#include <stdio.h>
+#include <string>
+#include <list>
+
+#include "include/ast.hpp"
+
+%}
+
+%require "2.3"
+
+%debug
+
+%start program
+
+%defines
+
+%skeleton "lalr1.cc"
+
+%name-prefix="lury"
+
+%define "parser_class_name" "Parser"
+
+%locations
+%initial-action
+{
+	@$.begin.filename = @$.end.filename = &driver.streamname;
+};
+
+%parse-param { class Driver& driver }
+
+%error-verbose
+
+%union {
+	int int_value;
+	double double_value;
+	std::string *string_value;
+	class AST *ast;
+	std::list<std::string> *param_list;
+	list<AST *> *arg_list;
+	int level_diff;
+}
+
+/* Whitespace */
+%token NewLine Indent Dedent
+%token END 0 "end of file"
+
+/* ContextualKeyword */
+%token IdentifierGet IdentifierSet IdentifierFile IdentifierLine IdentifierExit
+%token IdentifierSuccess IdentifierFailure
+
+/* Keyword */
+%token KeywordAbstract KeywordAnd KeywordBreak KeywordCase KeywordCatch KeywordClass
+%token KeywordContinue KeywordDef KeywordDefault KeywordDelete KeywordElif KeywordElse
+%token KeywordEnum KeywordExtended KeywordFalse KeywordFinally KeywordFor KeywordIf
+%token KeywordImport KeywordIn KeywordInterface KeywordInvariant KeywordIs KeywordLazy
+%token KeywordNameof KeywordNew KeywordNil KeywordNot KeywordOr KeywordOut KeywordOverride
+%token KeywordPass KeywordPrivate KeywordProperty KeywordProtected KeywordPublic
+%token KeywordRef KeywordReflect KeywordReturn KeywordScope KeywordSealed KeywordStatic
+%token KeywordSuper KeywordSwitch KeywordThis KeywordThrow KeywordTrue KeywordTry
+%token KeywordUnittest KeywordUnless KeywordUntil KeywordVar KeywordWhile KeywordWith
+%token KeywordYield
+
+/* Identifier */
+%token <string_value> Identifier
+
+/* Literal */
+%token EmbedStringLiteral WysiwygStringLiteral
+%token <double_value> ImaginaryNumber
+%token <double_value> FloatNumber
+%token <int_value> Integer
+%token <string_value> StringLiteral
+
+/* Operator */
+%token RangeOpen RangeClose Increment AssignmentAdd Decrement AssignmentSub
+%token AnnotationReturn AssignmentConcat AssignmentPower Power AssignmentMultiply
+%token AssignmentIntDivide IntDivide AssignmentDivide AssignmentModulo AssignmentLeftShift
+%token LeftShift LessThan AssignmentRightShift RightShift MoreThan Equal Lambda NotEqual
+%token NotIn IsNot AndShort AssignmentAnd AssignmentXor OrShort AssignmentOr NilCoalesce
+
+%type <ast> statement statement_list multiplication_expression unary_expression
+%type <ast> power_expression addition_expression expression postfix_expression
+%type <ast> literal primary statements range_expression comparison_expression
+%type <ast> program program_lines program_line bool_not_expression
+%type <ast> if_statement elif_statements else_statement suite while_statement
+%type <ast> simple_statement simple_statements return_statement continue_statement break_statement
+%type <ast> identifier_all function_name lambda_expression lambda_body
+%type <ast> assignment_expression comma_expression
+%type <ast> function_definition argument
+%type <param_list> parameter_list
+%type <string_value> parameter
+%type <arg_list> argument_list
+
+%left  ','
+%right '=' AssignmentPower AssignmentMultiply AssignmentDivide AssignmentIntDivide AssignmentModulo AssignmentAdd AssignmentSub AssignmentConcat AssignmentOr AssignmentAnd AssignmentXor AssignmentLeftShift AssignmentRightShift
+%right '?' ':' KeywordIf KeywordElse
+%left  OrShort KeywordOr
+%left  AndShort KeywordAnd
+%right '!' KeywordNot
+%left  Equal NotEqual '<' '>' LessThan MoreThan KeywordIs IsNot
+%left  '|'
+%left  '^'
+%left  '&'
+%left  LeftShift RightShift
+%left  '+' '-' '~'
+%left  '*' IntDivide '/' '%'
+%right Power
+%right Increment Decrement
+%left  '.'
+
+%{
+
+#include "include/driver.hpp"
+#include "include/scanner.hpp"
+
+/* this "connects" the bison parser in the driver to the flex scanner class
+ * object. it defines the yylex() function call to pull the next token from the
+ * current lexer object of the driver context. */
+#undef yylex
+#define yylex driver.lexer->lex
+
+%}
+
+%%
+program
+	:
+	{
+		$$ = new CompoundAST();
+		driver.ast = $$;
+	}
+	| program_lines
+	{
+		driver.ast = $1;
+		$$ = $1;
+	}
+
+program_lines
+	: program_line
+	| program_lines program_line
+	{
+		CompoundAST *ast;
+		if ($1->getValueID() == CompoundID) {
+			ast = (CompoundAST *)$1;
+		}
+		else {
+			ast = new CompoundAST($1);
+		}
+		ast->push_back($2);
+		$$ = ast;
+	}
+
+program_line
+	: statement
+	| NewLine
+	{
+		$$ = new CompoundAST();
+	}
+
+statement
+	: statement_list NewLine
+	{
+		$$ = $1;
+	}
+	| compound_statement
+
+statement_list
+	: simple_statement
+	| simple_statement simple_statements
+	{
+		CompoundAST *ast;
+		if ($2->getValueID() == CompoundID) {
+			ast =  (CompoundAST *)$2;
+		}
+		else {
+			ast = new CompoundAST($2);
+		}
+		ast->push_front($1);
+		$$ = ast;
+	}
+
+simple_statements
+	: ';'
+	{
+		$$ = new CompoundAST();
+	}
+	| ';' simple_statement
+	{
+		$$ = $2;
+	}
+	| ';' simple_statement simple_statements
+	{
+		CompoundAST *ast;
+		if ($3->getValueID() == CompoundID) {
+			ast = (CompoundAST *)$3;
+		}
+		else {
+			ast = new CompoundAST($3);
+		}
+		ast->push_front($2);
+		$$ = ast;
+	}
+
+compound_statement
+	: if_statement
+	// | unless_statement
+	| while_statement
+	// | for_statement
+	// | try_statement
+	| function_definition
+	// | class_definition
+	// | unittest_statement
+
+suite
+	: statement_list NewLine
+	{
+		$$ = $1;
+	}
+	| NewLine Indent statements Dedent
+	{
+		$$ = $3;
+	}
+
+
+statements
+	: statement
+	| statements statement
+	{
+		CompoundAST *ast;
+		if ($1->getValueID() == CompoundID) {
+			ast = (CompoundAST *)$1;
+		}
+		else {
+			ast = new CompoundAST($1);
+		}
+		ast->push_back($2);
+		$$ = ast
+	}
+
+if_statement
+	: KeywordIf expression ':' suite
+	{
+		$$ = new IfStatementAST($2, $4);
+	}
+	| KeywordIf expression ':' suite elif_statements
+	{
+		$$ = new IfStatementAST($2, $4, $5);
+	}
+
+elif_statements
+	: KeywordElif expression ':' suite
+	{
+		$$ = new IfStatementAST($2, $4);
+	}
+	| KeywordElif expression ':' suite elif_statements
+	{
+		$$ = new IfStatementAST($2, $4, $5);
+	}
+	| else_statement
+
+else_statement
+	: KeywordElse ':' suite
+	{
+		$$ = $3;
+	}
+
+// unless_statement
+// 	: KeywordUnless expression ':' suite
+// 	| KeywordUnless expression ':' suite else_statement
+
+while_statement
+	: KeywordWhile expression ':' suite
+	{
+		$$ = new WhileStatementAST($2, $4, NULL);
+	}
+	| KeywordWhile expression ':' suite else_statement
+	{
+		$$ = new WhileStatementAST($2, $4, $5);
+	}
+
+// for_statement
+// 	: KeywordFor identifier_all KeywordIn expression ':' suite
+// 	| KeywordFor identifier_all KeywordIn expression ':' suite else_statement
+//
+// try_statement
+// 	: KeywordTry ':' suite catch_statement
+// 	| KeywordTry ':' suite finally_statement
+//
+// catch_statement
+// 	: KeywordCatch identifier_all KeywordCase class_name ':' suite
+// 	| KeywordCatch identifier_all KeywordCase class_name ':' suite catch_statement
+// 	| KeywordCatch identifier_all KeywordCase class_name ':' suite finally_statement
+//
+// finally_statement
+// 	: KeywordFinally ':' suite
+
+function_definition
+	: KeywordDef function_name ':' suite
+	{
+			IdentifierAST *ident = (IdentifierAST *)$2;
+			$$ = new FunctionStatementAST(ident->getValue(), new list<string>, $4);
+	}
+	| KeywordDef function_name '(' ')' ':' suite
+	{
+			IdentifierAST *ident = (IdentifierAST *)$2;
+			$$ = new FunctionStatementAST(ident->getValue(), new list<string>, $6);
+	}
+	| KeywordDef function_name '(' parameter_list ')'':' suite
+	{
+			IdentifierAST *ident = (IdentifierAST *)$2;
+			$$ = new FunctionStatementAST(ident->getValue(), $4, $7);
+	}
+	// | annotation_list KeywordDef function_name ':' suite
+	// | annotation_list KeywordDef function_name '(' ')' ':' suite
+	// | annotation_list KeywordDef function_name '(' parameter_list ')'':' suite
+
+function_name
+	: identifier_all
+	// | function_name '.' identifier_all
+	// | KeywordThis
+
+parameter
+	: identifier_all
+
+parameter_list
+	: parameter
+	{
+			list<string> *l = new list<string>();
+			IdentifierAST *ident = (IdentifierAST *)$1;
+			l->push_back(ident->getValue());
+			$$ = l;
+	}
+	| parameter_list ',' parameter
+	{
+			list<string> *l = $1;
+			IdentifierAST *ident = (IdentifierAST *)$3;
+			l->push_back(ident->getValue());
+			$$ = l;
+	}
+
+// class_definition
+// 	: KeywordClass class_name ':' suite
+// 	| KeywordClass class_name '(' inheritance_list ')' ':' suite
+// 	| annotation_list KeywordClass class_name ':' suite
+// 	| annotation_list KeywordClass class_name '(' inheritance_list ')' ':' suite
+//
+// class_name
+// 	: identifier_all
+//
+// inheritance_list
+// 	: object_name
+// 	| inheritance_list ',' object_name
+//
+// object_name
+// 	: identifier_all
+// 	| object_name '.' identifier_all
+//
+// annotation_list
+// 	: annotation
+// 	| annotation_list annotation
+//
+// annotation
+// 	: '<' annotation_params '>' NewLine
+//
+// annotation_params
+// 	: annotation_param
+// 	| annotation_params ',' annotation_param
+//
+// annotation_param
+// 	: class_name
+// 	| class_name '(' ')'
+// 	| class_name '(' argument_list ')'
+//
+// unittest_statement
+// 	: KeywordUnittest ':' suite
+
+simple_statement
+	: expression_statement
+	// : pass_statement
+	// | expression_statement
+	| return_statement
+	| break_statement
+	| continue_statement
+	// | import_statement
+
+// pass_statement
+// 	: KeywordPass
+
+expression_statement
+	: expression
+
+return_statement
+	: KeywordReturn
+	{
+		$$ = new ReturnStatementAST(new NilLitAST());
+	}
+	| KeywordReturn expression
+	{
+		$$ = new ReturnStatementAST($2);
+	}
+
+break_statement
+	: KeywordBreak
+	{
+		$$ = new BreakStatementAST();
+	}
+
+continue_statement
+	: KeywordContinue
+	{
+		$$ = new ContinueStatementAST();
+	}
+
+// import_statement
+// 	: KeywordImport import_names
+// 	| KeywordPublic KeywordImport import_names
+//
+// import_names
+// 	: import_name
+// 	| import_names ',' import_name
+//
+// import_name
+// 	: module_name
+//
+// module_name
+// 	: identifier_all
+// 	| module_name '.' identifier_all
+
+identifier_all
+	: Identifier
+	{
+		$$ = new IdentifierAST(*$1);
+	}
+	// | contextual_keyword
+
+// contextual_keyword
+// 	: IdentifierGet
+// 	| IdentifierSet
+// 	| IdentifierFile
+// 	| IdentifierLine
+// 	| IdentifierExit
+// 	| IdentifierSuccess
+// 	| IdentifierFailure
+
+expression
+	: assignment_expression
+
+assignment_expression
+	: comma_expression
+	| assignment_expression '=' comma_expression
+	{
+		$$ = new BinaryAssignAST($1, $3, OpEqual);
+	}
+	| assignment_expression AssignmentAdd comma_expression
+	{
+		$$ = new BinaryAssignAST($1, $3, OpAdd);
+	}
+	| assignment_expression AssignmentSub comma_expression
+	{
+		$$ = new BinaryAssignAST($1, $3, OpSub);
+	}
+	| assignment_expression AssignmentMultiply comma_expression
+	{
+		$$ = new BinaryAssignAST($1, $3, OpMul);
+	}
+	| assignment_expression AssignmentDivide comma_expression
+	{
+		$$ = new BinaryAssignAST($1, $3, OpDiv);
+	}
+	// | assignment_expression AssignmentIntDivide comma_expression
+	// | assignment_expression AssignmentPower comma_expression
+	// | assignment_expression AssignmentModulo comma_expression
+	// | assignment_expression AssignmentAnd comma_expression
+	// | assignment_expression AssignmentOr comma_expression
+	// | assignment_expression AssignmentXor comma_expression
+	// | assignment_expression AssignmentConcat comma_expression
+	// | assignment_expression AssignmentLeftShift comma_expression
+	// | assignment_expression AssignmentRightShift comma_expression
+
+comma_expression
+	: generator_expression
+	// | comma_expression ',' generator_expression
+
+generator_expression
+	: lambda_expression
+	// | lambda_expression KeywordFor identifier_all KeywordIn lambda_expression
+
+lambda_expression
+	: conditional_expression
+	| Lambda parameter '(' lambda_body ')'
+	{
+		list<string> params;
+		IdentifierAST *ident = (IdentifierAST *)$2;
+		params.push_back(ident->getValue());
+		$$ = new LambdaLitAST(params, $4);
+	}
+	| Lambda '(' lambda_body ')'
+	{
+		list<string> params;
+		$$ = new LambdaLitAST(params, $3);
+	}
+	| Lambda parameter_list '(' lambda_body ')'
+	{
+		list<string> params = *$2;
+		delete $2;
+		$$ = new LambdaLitAST(params, $4);
+	}
+
+lambda_body
+	: expression
+	| KeywordPass
+	{
+		$$ = NULL;
+	}
+
+conditional_expression
+	: bool_or_expression
+	// | bool_or_expression '?' bool_or_expression ':' bool_or_expression
+	// | bool_or_expression KeywordIf bool_or_expression KeywordElse bool_or_expression
+	// | bool_or_expression KeywordUnless bool_or_expression KeywordElse bool_or_expression
+
+bool_or_expression
+	: bool_and_expression
+	// | bool_or_expression KeywordOr bool_and_expression
+	// | bool_or_expression OrShort bool_and_expression
+
+bool_and_expression
+	: bool_not_expression
+	// | bool_and_expression KeywordAnd bool_not_expression
+	// | bool_and_expression AndShort bool_not_expression
+
+bool_not_expression
+	: comparison_expression
+	| KeywordNot bool_not_expression
+	{
+		$$ = new NotAST($2);
+	}
+	| '!' bool_not_expression
+	{
+		$$ = new NotAST($2);
+	}
+
+comparison_expression
+	: range_expression
+	| comparison_expression '>' range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpGreater);
+	}
+	| comparison_expression '<' range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpLess);
+	}
+	| comparison_expression LessThan range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpLessOrEqual);
+	}
+	| comparison_expression MoreThan range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpGreaterOrEqual);
+	}
+	| comparison_expression Equal range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpEqual);
+	}
+
+// comparison_operator
+// 	: '>'
+// 	| '<'
+// 	| Equal
+// 	| LessThan
+// 	| MoreThan
+// 	| NotEqual
+// 	| KeywordIs
+// 	| IsNot
+// 	| KeywordIs KeywordNot
+
+range_expression
+	: or_expression
+	// | or_expression RangeOpen or_expression
+	// | or_expression RangeClose or_expression
+
+or_expression
+	: xor_expression
+	// | or_expression '|' xor_expression
+
+xor_expression
+	: and_expression
+	// | xor_expression '^' and_expression
+
+and_expression
+	: shift_expression
+	// | and_expression '&' shift_expression
+
+shift_expression
+	: addition_expression
+	// | shift_expression LeftShift addition_expression
+	// | shift_expression RightShift addition_expression
+
+addition_expression
+	: multiplication_expression
+	| addition_expression '+' multiplication_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpAdd);
+	}
+	| addition_expression '-' multiplication_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpSub);
+	}
+	// | addition_expression '~' multiplication_expression
+
+multiplication_expression
+	: unary_expression
+	| multiplication_expression '*' unary_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpMul);
+	}
+	// | multiplication_expression IntDivide unary_expression
+	| multiplication_expression '/' unary_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpDiv);
+	}
+	// | multiplication_expression '%' unary_expression
+
+unary_expression
+	: power_expression
+	// | Increment unary_expression
+	// | Decrement unary_expression
+	// | '-' unary_expression
+	// | '+' unary_expression
+	// | '~' unary_expression
+
+power_expression
+	: callref_expression
+	// | power_expression Power callref_expression
+
+callref_expression
+	: postfix_expression
+	// | KeywordRef postfix_expression
+
+postfix_expression
+	: primary
+	// | postfix_expression '.' identifier_all
+	// | postfix_expression Increment
+	// | postfix_expression Decrement
+	| postfix_expression '(' ')'
+	{
+			list<AST *> empty;
+			$$ = new CallAST($1, empty);
+	}
+	| postfix_expression '(' argument_list ')'
+	{
+			$$ = new CallAST($1, *$3);
+	}
+	// | postfix_expression '[' ']'
+	// | postfix_expression '[' argument_list ']'
+
+argument_list
+	: argument
+	{
+			list<AST *> *args = new list<AST *>();
+			args->push_back($1);
+			$$ = args;
+	}
+	| argument_list ',' argument
+	{
+			list<AST *> *args = $1;
+			args->push_back($3);
+			$$ = args;
+	}
+
+argument
+	: expression
+	// | named_argument
+
+// named_argument
+// 	: identifier_all ':' expression
+
+primary
+	: identifier_all
+	| literal
+	| KeywordTrue
+	{
+		$$ = new BooleanLitAST(true);
+	}
+	| KeywordFalse
+	{
+		$$ = new BooleanLitAST(false);
+	}
+	| KeywordNil
+	{
+		$$ = new NilLitAST();
+	}
+	// | KeywordThis
+	// | KeywordSuper
+	| '(' expression ')'
+	{
+	  $$ = $2;
+	}
+	// | '$'
+
+literal
+	: StringLiteral
+	{
+		$$ = new StringLitAST(*$1);
+	}
+	// | EmbedStringLiteral
+	// | WysiwygStringLiteral
+	| ImaginaryNumber
+	{
+		$$ = new ImaginaryNumberLitAST($1);
+	}
+	| FloatNumber
+	{
+		$$ = new FloatNumberLitAST($1);
+	}
+	| Integer
+	{
+		$$ = new IntegerLitAST($1);
+	}
+
+// list_literal
+// 	: '[' ']'
+// 	| '[' list_element_list ']'
+//
+// list_element_list
+// 	: list_element
+// 	| list_element_list ',' list_element
+//
+// list_element
+// 	: expression
+//
+// tuple_literal
+// 	: '(' ')'
+// 	| '(' tuple_element_list ')'
+//
+// tuple_element_list
+// 	: tuple_element
+// 	| tuple_element_list ',' tuple_element
+//
+// tuple_element
+// 	: expression
+//
+// hash_literal
+// 	: '{' '}'
+// 	| '{' hash_element_list '}'
+//
+// hash_element_list
+// 	: hash_element
+// 	| hash_element_list ',' hash_element
+//
+// hash_element
+// 	: expression ':' expression
+//
+// set_literal
+// 	: '{' set_element_list '}'
+//
+// set_element_list
+// 	: set_element
+// 	| set_element_list ',' set_element
+//
+// set_element
+// 	: expression
+%%
+
+void lury::Parser::error(const Parser::location_type& l, const std::string& m) {
+	driver.error(l, m);
+}
