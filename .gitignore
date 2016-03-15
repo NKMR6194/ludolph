@@ -1,4 +1,12 @@
 lury
 lury.output
 lury.dSYM
+
+lex.Lury.cc
+location.hh
+lury.tab.cpp
+lury.tab.hpp
+position.hh
+stack.hh
+
 test.lr

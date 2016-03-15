@@ -10,8 +10,7 @@ Ludolph is an implementation of Lury using C++.
 
 ## Build
 
-1. Install `clang++`
-1. Install `bison` and `flex` when you edit the grammer files.
+1. Install `clang++`, `bison` and `flex`.
 1. run `make`
 
 ## Run program
