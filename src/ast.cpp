@@ -23,6 +23,9 @@ ASTExit BinaryOpAST::eval(LuryContext *context) {
 		case OpEqual:
 			obj = lhs_obj->equal(rhs_obj);
 			break;
+		case OpNotEqual:
+			obj = lhs_obj->notEqual(rhs_obj);
+			break;
 		case OpLess:
 			obj = lhs_obj->less(rhs_obj);
 			break;

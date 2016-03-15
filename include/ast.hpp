@@ -38,6 +38,7 @@ enum OpID {
 	OpMul,
 	OpDiv,
 	OpEqual,
+	OpNotEqual,
 	OpLess,
 	OpLessOrEqual,
 	OpGreater,

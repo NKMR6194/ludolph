@@ -142,6 +142,7 @@ void printStack(STACK* stack) {
 "<=" return token::LessThan;
 ">=" return token::MoreThan;
 "==" return token::Equal;
+"!=" return token::NotEqual;
 "def" return token::KeywordDef;
 "nil" return token::KeywordNil;
 "return" return token::KeywordReturn;

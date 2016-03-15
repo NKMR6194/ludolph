@@ -568,6 +568,10 @@ comparison_expression
 	{
 		$$ = new BinaryOpAST($1, $3, OpEqual);
 	}
+	| comparison_expression NotEqual range_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpNotEqual);
+	}
 
 // comparison_operator
 // 	: '>'
