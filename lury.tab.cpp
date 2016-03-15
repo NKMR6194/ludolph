@@ -493,21 +493,21 @@ namespace lury
 	;}
     break;
 
-  case 18:
+  case 19:
 #line 216 "lury.ypp"
     {
 		(yyval.ast) = (yysemantic_stack_[(2) - (1)].ast);
 	;}
     break;
 
-  case 19:
+  case 20:
 #line 220 "lury.ypp"
     {
 		(yyval.ast) = (yysemantic_stack_[(4) - (3)].ast);
 	;}
     break;
 
-  case 21:
+  case 22:
 #line 228 "lury.ypp"
     {
 		CompoundAST *ast;
@@ -522,81 +522,95 @@ namespace lury
 	;}
     break;
 
-  case 22:
+  case 23:
 #line 242 "lury.ypp"
     {
 		(yyval.ast) = new IfStatementAST((yysemantic_stack_[(4) - (2)].ast), (yysemantic_stack_[(4) - (4)].ast));
 	;}
     break;
 
-  case 23:
+  case 24:
 #line 246 "lury.ypp"
     {
 		(yyval.ast) = new IfStatementAST((yysemantic_stack_[(5) - (2)].ast), (yysemantic_stack_[(5) - (4)].ast), (yysemantic_stack_[(5) - (5)].ast));
 	;}
     break;
 
-  case 24:
+  case 25:
 #line 252 "lury.ypp"
     {
 		(yyval.ast) = new IfStatementAST((yysemantic_stack_[(4) - (2)].ast), (yysemantic_stack_[(4) - (4)].ast));
 	;}
     break;
 
-  case 25:
+  case 26:
 #line 256 "lury.ypp"
     {
 		(yyval.ast) = new IfStatementAST((yysemantic_stack_[(5) - (2)].ast), (yysemantic_stack_[(5) - (4)].ast), (yysemantic_stack_[(5) - (5)].ast));
 	;}
     break;
 
-  case 27:
+  case 28:
 #line 263 "lury.ypp"
     {
 		(yyval.ast) = (yysemantic_stack_[(3) - (3)].ast);
 	;}
     break;
 
-  case 28:
+  case 29:
+#line 269 "lury.ypp"
+    {
+		(yyval.ast) = new IfStatementAST(new NotAST((yysemantic_stack_[(4) - (2)].ast)), (yysemantic_stack_[(4) - (4)].ast));
+	;}
+    break;
+
+  case 30:
 #line 273 "lury.ypp"
+    {
+		(yyval.ast) = new IfStatementAST(new NotAST((yysemantic_stack_[(5) - (2)].ast)), (yysemantic_stack_[(5) - (4)].ast), (yysemantic_stack_[(5) - (5)].ast));
+	;}
+    break;
+
+  case 31:
+#line 279 "lury.ypp"
     {
 		(yyval.ast) = new WhileStatementAST((yysemantic_stack_[(4) - (2)].ast), (yysemantic_stack_[(4) - (4)].ast), NULL);
 	;}
     break;
 
-  case 29:
-#line 277 "lury.ypp"
+  case 32:
+#line 283 "lury.ypp"
     {
 		(yyval.ast) = new WhileStatementAST((yysemantic_stack_[(5) - (2)].ast), (yysemantic_stack_[(5) - (4)].ast), (yysemantic_stack_[(5) - (5)].ast));
 	;}
     break;
 
-  case 30:
-#line 299 "lury.ypp"
+  case 33:
+#line 305 "lury.ypp"
     {
 			IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(4) - (2)].ast);
 			(yyval.ast) = new FunctionStatementAST(ident->getValue(), new list<string>, (yysemantic_stack_[(4) - (4)].ast));
 	;}
     break;
 
-  case 31:
-#line 304 "lury.ypp"
+  case 34:
+#line 310 "lury.ypp"
     {
 			IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(6) - (2)].ast);
 			(yyval.ast) = new FunctionStatementAST(ident->getValue(), new list<string>, (yysemantic_stack_[(6) - (6)].ast));
 	;}
     break;
 
-  case 32:
-#line 309 "lury.ypp"
+  case 35:
+#line 315 "lury.ypp"
     {
 			IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(7) - (2)].ast);
 			(yyval.ast) = new FunctionStatementAST(ident->getValue(), (yysemantic_stack_[(7) - (4)].param_list), (yysemantic_stack_[(7) - (7)].ast));
 	;}
     break;
 
-  case 35:
-#line 327 "lury.ypp"
+  case 38:
+#line 333 "lury.ypp"
     {
 			list<string> *l = new list<string>();
 			IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(1) - (1)].string_value);
@@ -605,8 +619,8 @@ namespace lury
 	;}
     break;
 
-  case 36:
-#line 334 "lury.ypp"
+  case 39:
+#line 340 "lury.ypp"
     {
 			list<string> *l = (yysemantic_stack_[(3) - (1)].param_list);
 			IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(3) - (3)].string_value);
@@ -615,78 +629,78 @@ namespace lury
 	;}
     break;
 
-  case 42:
-#line 394 "lury.ypp"
+  case 45:
+#line 400 "lury.ypp"
     {
 		(yyval.ast) = new ReturnStatementAST(new NilLitAST());
 	;}
     break;
 
-  case 43:
-#line 398 "lury.ypp"
+  case 46:
+#line 404 "lury.ypp"
     {
 		(yyval.ast) = new ReturnStatementAST((yysemantic_stack_[(2) - (2)].ast));
 	;}
     break;
 
-  case 44:
-#line 404 "lury.ypp"
+  case 47:
+#line 410 "lury.ypp"
     {
 		(yyval.ast) = new BreakStatementAST();
 	;}
     break;
 
-  case 45:
-#line 410 "lury.ypp"
+  case 48:
+#line 416 "lury.ypp"
     {
 		(yyval.ast) = new ContinueStatementAST();
 	;}
     break;
 
-  case 46:
-#line 431 "lury.ypp"
+  case 49:
+#line 437 "lury.ypp"
     {
 		(yyval.ast) = new IdentifierAST(*(yysemantic_stack_[(1) - (1)].string_value));
 	;}
     break;
 
-  case 49:
-#line 451 "lury.ypp"
+  case 52:
+#line 457 "lury.ypp"
     {
 		(yyval.ast) = new BinaryAssignAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpEqual);
 	;}
     break;
 
-  case 50:
-#line 455 "lury.ypp"
+  case 53:
+#line 461 "lury.ypp"
     {
 		(yyval.ast) = new BinaryAssignAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpAdd);
 	;}
     break;
 
-  case 51:
-#line 459 "lury.ypp"
+  case 54:
+#line 465 "lury.ypp"
     {
 		(yyval.ast) = new BinaryAssignAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpSub);
 	;}
     break;
 
-  case 52:
-#line 463 "lury.ypp"
+  case 55:
+#line 469 "lury.ypp"
     {
 		(yyval.ast) = new BinaryAssignAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpMul);
 	;}
     break;
 
-  case 53:
-#line 467 "lury.ypp"
+  case 56:
+#line 473 "lury.ypp"
     {
 		(yyval.ast) = new BinaryAssignAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpDiv);
 	;}
     break;
 
-  case 57:
-#line 491 "lury.ypp"
+  case 60:
+#line 497 "lury.ypp"
     {
 		list<string> params;
 		IdentifierAST *ident = (IdentifierAST *)(yysemantic_stack_[(5) - (2)].string_value);
@@ -695,16 +709,16 @@ namespace lury
 	;}
     break;
 
-  case 58:
-#line 498 "lury.ypp"
+  case 61:
+#line 504 "lury.ypp"
     {
 		list<string> params;
 		(yyval.ast) = new LambdaLitAST(params, (yysemantic_stack_[(4) - (3)].ast));
 	;}
     break;
 
-  case 59:
-#line 503 "lury.ypp"
+  case 62:
+#line 509 "lury.ypp"
     {
 		list<string> params = *(yysemantic_stack_[(5) - (2)].param_list);
 		delete (yysemantic_stack_[(5) - (2)].param_list);
@@ -712,107 +726,107 @@ namespace lury
 	;}
     break;
 
-  case 61:
-#line 512 "lury.ypp"
+  case 64:
+#line 518 "lury.ypp"
     {
 		(yyval.ast) = NULL;
 	;}
     break;
 
-  case 66:
-#line 535 "lury.ypp"
-    {
-		(yyval.ast) = new NotAST((yysemantic_stack_[(2) - (2)].ast));
-	;}
-    break;
-
-  case 67:
-#line 539 "lury.ypp"
-    {
-		(yyval.ast) = new NotAST((yysemantic_stack_[(2) - (2)].ast));
-	;}
-    break;
-
   case 69:
-#line 546 "lury.ypp"
+#line 541 "lury.ypp"
+    {
+		(yyval.ast) = new NotAST((yysemantic_stack_[(2) - (2)].ast));
+	;}
+    break;
+
+  case 70:
+#line 545 "lury.ypp"
+    {
+		(yyval.ast) = new NotAST((yysemantic_stack_[(2) - (2)].ast));
+	;}
+    break;
+
+  case 72:
+#line 552 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpGreater);
 	;}
     break;
 
-  case 70:
-#line 550 "lury.ypp"
+  case 73:
+#line 556 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpLess);
 	;}
     break;
 
-  case 71:
-#line 554 "lury.ypp"
+  case 74:
+#line 560 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpLessOrEqual);
 	;}
     break;
 
-  case 72:
-#line 558 "lury.ypp"
+  case 75:
+#line 564 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpGreaterOrEqual);
 	;}
     break;
 
-  case 73:
-#line 562 "lury.ypp"
+  case 76:
+#line 568 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpEqual);
 	;}
     break;
 
-  case 80:
-#line 602 "lury.ypp"
+  case 83:
+#line 608 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpAdd);
 	;}
     break;
 
-  case 81:
-#line 606 "lury.ypp"
+  case 84:
+#line 612 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpSub);
 	;}
     break;
 
-  case 83:
-#line 614 "lury.ypp"
+  case 86:
+#line 620 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpMul);
 	;}
     break;
 
-  case 84:
-#line 619 "lury.ypp"
+  case 87:
+#line 625 "lury.ypp"
     {
 		(yyval.ast) = new BinaryOpAST((yysemantic_stack_[(3) - (1)].ast), (yysemantic_stack_[(3) - (3)].ast), OpDiv);
 	;}
     break;
 
-  case 89:
-#line 646 "lury.ypp"
+  case 92:
+#line 652 "lury.ypp"
     {
 			list<AST *> empty;
 			(yyval.ast) = new CallAST((yysemantic_stack_[(3) - (1)].ast), empty);
 	;}
     break;
 
-  case 90:
-#line 651 "lury.ypp"
+  case 93:
+#line 657 "lury.ypp"
     {
 			(yyval.ast) = new CallAST((yysemantic_stack_[(4) - (1)].ast), *(yysemantic_stack_[(4) - (3)].arg_list));
 	;}
     break;
 
-  case 91:
-#line 659 "lury.ypp"
+  case 94:
+#line 665 "lury.ypp"
     {
 			list<AST *> *args = new list<AST *>();
 			args->push_back((yysemantic_stack_[(1) - (1)].ast));
@@ -820,8 +834,8 @@ namespace lury
 	;}
     break;
 
-  case 92:
-#line 665 "lury.ypp"
+  case 95:
+#line 671 "lury.ypp"
     {
 			list<AST *> *args = (yysemantic_stack_[(3) - (1)].arg_list);
 			args->push_back((yysemantic_stack_[(3) - (3)].ast));
@@ -829,57 +843,57 @@ namespace lury
 	;}
     break;
 
-  case 96:
-#line 682 "lury.ypp"
+  case 99:
+#line 688 "lury.ypp"
     {
 		(yyval.ast) = new BooleanLitAST(true);
 	;}
     break;
 
-  case 97:
-#line 686 "lury.ypp"
+  case 100:
+#line 692 "lury.ypp"
     {
 		(yyval.ast) = new BooleanLitAST(false);
 	;}
     break;
 
-  case 98:
-#line 690 "lury.ypp"
+  case 101:
+#line 696 "lury.ypp"
     {
 		(yyval.ast) = new NilLitAST();
 	;}
     break;
 
-  case 99:
-#line 696 "lury.ypp"
+  case 102:
+#line 702 "lury.ypp"
     {
 	  (yyval.ast) = (yysemantic_stack_[(3) - (2)].ast);
 	;}
     break;
 
-  case 100:
-#line 703 "lury.ypp"
+  case 103:
+#line 709 "lury.ypp"
     {
 		(yyval.ast) = new StringLitAST(*(yysemantic_stack_[(1) - (1)].string_value));
 	;}
     break;
 
-  case 101:
-#line 709 "lury.ypp"
+  case 104:
+#line 715 "lury.ypp"
     {
 		(yyval.ast) = new ImaginaryNumberLitAST((yysemantic_stack_[(1) - (1)].double_value));
 	;}
     break;
 
-  case 102:
-#line 713 "lury.ypp"
+  case 105:
+#line 719 "lury.ypp"
     {
 		(yyval.ast) = new FloatNumberLitAST((yysemantic_stack_[(1) - (1)].double_value));
 	;}
     break;
 
-  case 103:
-#line 717 "lury.ypp"
+  case 106:
+#line 723 "lury.ypp"
     {
 		(yyval.ast) = new IntegerLitAST((yysemantic_stack_[(1) - (1)].int_value));
 	;}
@@ -887,7 +901,7 @@ namespace lury
 
 
     /* Line 675 of lalr1.cc.  */
-#line 891 "lury.tab.cpp"
+#line 905 "lury.tab.cpp"
 	default: break;
       }
     YY_SYMBOL_PRINT ("-> $$ =", yyr1_[yyn], &yyval, &yyloc);
@@ -1094,26 +1108,27 @@ namespace lury
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char Parser::yypact_ninf_ = -123;
+  const signed char Parser::yypact_ninf_ = -107;
   const short int
   Parser::yypact_[] =
   {
-         4,  -123,  -123,  -123,   -29,  -123,   219,  -123,   249,   219,
-    -123,   219,  -123,  -123,  -123,  -123,  -123,   -63,   249,   219,
-      45,     4,  -123,  -123,    48,  -123,  -123,  -123,  -123,   -66,
-    -123,  -123,  -123,  -123,  -123,  -123,   -60,  -123,  -123,  -123,
-    -123,  -123,  -123,  -123,   -46,  -123,  -123,  -123,  -123,  -123,
-     -80,   -64,  -123,  -123,  -123,   -61,  -123,  -123,   -78,  -123,
-     -50,  -123,  -123,   -42,   189,   -51,   -85,  -123,  -123,   -47,
-    -123,  -123,  -123,   141,  -123,   219,   219,   219,   219,   219,
-     267,   267,   267,   267,   267,   267,   267,   267,   267,   171,
-      14,   -65,    14,    14,  -123,  -123,   -45,   189,   -29,   189,
-    -123,   -66,  -123,  -123,  -123,  -123,  -123,  -123,  -123,  -123,
-    -123,  -123,   -64,   -64,  -123,  -123,  -123,  -123,   -99,  -123,
-      79,    94,  -123,   -10,  -123,   -96,    47,    83,  -123,   -12,
-    -123,    -9,  -123,   219,  -123,   111,  -123,    14,     6,   219,
-       8,  -123,  -123,  -123,  -123,  -123,  -123,  -123,    93,  -123,
-      14,     9,    14,  -123,  -123,  -123,    14,  -123,    47,  -123
+         5,  -107,  -107,  -107,   -65,  -107,   233,  -107,   260,   233,
+    -107,   233,   233,  -107,  -107,  -107,  -107,  -107,   -59,   260,
+     233,    13,     5,  -107,  -107,    20,  -107,  -107,  -107,  -107,
+    -107,  -105,  -107,  -107,  -107,  -107,  -107,  -107,   -47,  -107,
+    -107,  -107,  -107,  -107,  -107,  -107,    46,  -107,  -107,  -107,
+    -107,  -107,   -64,   -63,  -107,  -107,  -107,   -99,  -107,  -107,
+     -98,  -107,   -71,  -107,  -107,   -68,   -51,   183,   -60,   -97,
+    -107,  -107,   -57,  -107,  -107,  -107,   173,  -107,   233,   233,
+     233,   233,   233,    41,    41,    41,    41,    41,    41,    41,
+      41,    41,   -22,    78,   -66,    78,    78,    78,  -107,  -107,
+     -52,   183,   -65,   183,  -107,  -105,  -107,  -107,  -107,  -107,
+    -107,  -107,  -107,  -107,  -107,  -107,   -63,   -63,  -107,  -107,
+    -107,  -107,   -96,  -107,    84,    89,  -107,   -11,  -107,   -86,
+      48,    77,    77,  -107,   -18,  -107,   -15,  -107,   233,  -107,
+     166,  -107,    78,    11,   233,    12,  -107,  -107,  -107,  -107,
+    -107,  -107,  -107,  -107,   105,  -107,    78,    18,    78,  -107,
+    -107,  -107,    78,  -107,    48,  -107
   };
 
   /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -1122,44 +1137,47 @@ namespace lury
   const unsigned char
   Parser::yydefact_[] =
   {
-         2,     7,    44,    45,     0,    97,     0,    98,     0,    42,
-      96,     0,    46,   101,   102,   103,   100,     0,     0,     0,
-       0,     3,     4,     6,     0,     9,    15,    16,    17,    10,
-      37,    38,    39,    40,    94,    41,    47,    48,    54,    55,
-      56,    62,    63,    64,    65,    68,    74,    75,    76,    77,
-      78,    79,    82,    85,    86,    87,    88,    95,     0,    33,
-       0,    66,    43,     0,     0,    35,     0,    34,    67,     0,
-       1,     5,     8,    12,    11,     0,     0,     0,     0,     0,
+         2,     7,    47,    48,     0,   100,     0,   101,     0,    45,
+      99,     0,     0,    49,   104,   105,   106,   103,     0,     0,
+       0,     0,     3,     4,     6,     0,     9,    15,    16,    17,
+      18,    10,    40,    41,    42,    43,    97,    44,    50,    51,
+      57,    58,    59,    65,    66,    67,    68,    71,    77,    78,
+      79,    80,    81,    82,    85,    88,    89,    90,    91,    98,
+       0,    36,     0,    69,    46,     0,     0,     0,    38,     0,
+      37,    70,     0,     1,     5,     8,    12,    11,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    61,    60,     0,     0,     0,     0,
-      99,    13,    50,    51,    52,    53,    49,    71,    72,    73,
-      70,    69,    80,    81,    83,    84,    89,    93,     0,    91,
-       0,     0,    30,     0,    35,     0,    22,    28,    58,     0,
-      36,     0,    14,     0,    90,     0,    18,     0,     0,     0,
-       0,    23,    26,    29,    57,    59,    92,    20,     0,    31,
-       0,     0,     0,    19,    21,    32,     0,    27,    24,    25
+       0,     0,     0,     0,     0,     0,     0,     0,    64,    63,
+       0,     0,     0,     0,   102,    13,    53,    54,    55,    56,
+      52,    74,    75,    76,    73,    72,    83,    84,    86,    87,
+      92,    96,     0,    94,     0,     0,    33,     0,    38,     0,
+      23,    29,    31,    61,     0,    39,     0,    14,     0,    93,
+       0,    19,     0,     0,     0,     0,    24,    27,    30,    32,
+      60,    62,    95,    21,     0,    34,     0,     0,     0,    20,
+      22,    35,     0,    28,    25,    26
   };
 
   /* YYPGOTO[NTERM-NUM].  */
-  const signed char
+  const short int
   Parser::yypgoto_[] =
   {
-      -123,  -123,  -123,   100,  -122,     0,    21,  -123,   -57,  -123,
-    -123,   -34,    10,  -123,  -123,  -123,   -82,    36,    63,  -123,
-    -123,  -123,  -123,    -2,    -5,  -123,    27,  -123,  -123,   -87,
-    -123,  -123,  -123,    34,  -123,    91,  -123,  -123,  -123,  -123,
-    -123,     5,    22,  -123,  -123,  -123,  -123,     7,  -123,  -123
+      -107,  -107,  -107,   101,  -106,     0,    21,  -107,   123,  -107,
+    -107,   -33,   -41,  -107,  -107,  -107,  -107,   -39,    40,    60,
+    -107,  -107,  -107,  -107,    25,    -5,  -107,     4,  -107,  -107,
+     -87,  -107,  -107,  -107,    28,  -107,   226,  -107,  -107,  -107,
+    -107,  -107,     6,    16,  -107,  -107,  -107,  -107,     9,  -107,
+    -107
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const short int
   Parser::yydefgoto_[] =
   {
-        -1,    20,    21,    22,    23,   121,    74,    25,   122,   148,
-      26,   141,   142,    27,    28,    58,    65,    66,    29,    30,
-      31,    32,    33,    34,    35,    36,    37,    38,    39,    96,
-      40,    41,    42,    43,    44,    45,    46,    47,    48,    49,
-      50,    51,    52,    53,    54,    55,   118,   119,    56,    57
+        -1,    21,    22,    23,    24,   125,    77,    26,   126,   154,
+      27,   146,   147,    28,    29,    30,    60,    68,    69,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
+     100,    42,    43,    44,    45,    46,    47,    48,    49,    50,
+      51,    52,    53,    54,    55,    56,    57,   122,   123,    58,
+      59
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1169,92 +1187,90 @@ namespace lury
   const unsigned char
   Parser::yytable_[] =
   {
-        24,    60,    59,    12,    62,    12,    63,     1,   133,   124,
-     129,    98,   131,   147,    69,    67,   130,   120,    75,     2,
-      76,    24,    98,     3,     4,    77,   154,   134,    78,     2,
-     138,     5,    90,     3,     6,   126,   127,    85,    86,    12,
-      99,     5,    61,     7,     8,    70,    80,    91,    79,    81,
-      82,    72,    68,     7,     8,     9,    87,    88,    73,    95,
-      92,   123,    64,    10,    89,     9,    83,    84,    93,    11,
-     139,   140,    12,    10,    97,    13,    14,    15,    16,   100,
-     149,   128,    12,   135,   117,    13,    14,    15,    16,    67,
-     112,   113,    95,   155,    95,   157,    67,   136,   153,   158,
-     137,    17,   102,   103,   104,   105,   106,   140,     2,   114,
-     115,    17,     3,     4,   144,    18,   150,   145,   152,   156,
-       5,    71,   132,     6,   159,    18,     2,   125,   117,    19,
-       3,     4,     7,     8,   151,    24,   101,   143,     5,    19,
-     146,     6,     0,     0,     9,     0,     0,     0,    24,     0,
-       7,     8,    10,     0,     0,     0,     2,     0,    11,     0,
-       3,    12,     9,     0,    13,    14,    15,    16,     5,     0,
-      10,   107,   108,   109,   110,   111,    11,     0,     0,    12,
-       7,     8,    13,    14,    15,    16,     0,     0,     0,     0,
-      17,     0,     9,     0,     0,     0,     0,     0,     5,     0,
-      10,     0,     0,     0,    18,     0,     0,     0,    17,    12,
-       7,     8,    13,    14,    15,    16,     5,     0,    19,     0,
-       0,     0,    18,     0,     0,     0,     0,     0,     7,     8,
-      10,     0,     0,    94,     0,     0,    19,     0,    17,    12,
-       0,     0,    13,    14,    15,    16,     5,     0,    10,     0,
-       0,     0,    18,     0,     0,     0,     0,    12,     7,     8,
-      13,    14,    15,    16,     0,     0,    19,     0,    17,     0,
-       0,     0,     0,     0,     0,     0,     5,     0,    10,     0,
-       0,     0,    18,     0,     0,     0,    17,    12,     7,     8,
-      13,    14,    15,    16,     5,     0,    19,   116,     0,     0,
-      18,     0,     0,     0,     0,     0,     7,     0,    10,     0,
-       0,     0,     0,     0,    19,     0,    17,    12,     0,     0,
-      13,    14,    15,    16,     0,     0,    10,     0,     0,     0,
-      18,     0,     0,     0,     0,    12,     0,     0,    13,    14,
-      15,    16,     0,     0,    19,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      18,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+        25,    62,    13,    13,    64,     5,    65,    66,     1,    13,
+     102,   138,    93,    73,   134,    72,   136,     7,     8,    76,
+       2,   102,    25,    75,     3,     4,    92,    94,   103,    61,
+     139,    78,     5,    79,   153,     6,    63,    10,    80,    95,
+     143,    81,    96,    70,     7,     8,    13,    71,   160,    14,
+      15,    16,    17,    88,    89,   128,     9,    90,    91,    97,
+     127,    82,    99,   135,    10,   101,    67,    11,     5,   104,
+      12,   144,   145,    13,   133,    18,    14,    15,    16,    17,
+       7,   124,   106,   107,   108,   109,   110,   121,   140,    19,
+     148,   149,   141,     2,   116,   117,    99,     3,    99,   142,
+      10,   145,    18,    20,   120,     5,   118,   119,   150,    13,
+     159,   151,    14,    15,    16,    17,    19,     7,     8,    70,
+       2,   156,   158,    74,     3,     4,   137,    70,   162,     9,
+      20,   165,     5,   121,   129,     6,   105,    10,    83,   157,
+      25,    84,    85,     0,     7,     8,    13,   152,     0,    14,
+      15,    16,    17,     0,    25,     0,     9,     0,    86,    87,
+       0,     0,     0,     0,    10,     0,    20,    11,     0,     0,
+      12,     0,     0,    13,     0,    18,    14,    15,    16,    17,
+       0,     2,     0,     0,     0,     3,     4,     0,     2,    19,
+       0,     0,     3,     5,     0,     0,     6,     0,     0,     0,
+       5,     0,    18,    20,     0,     7,     8,     0,     0,     0,
+       5,     0,     7,     8,     0,     0,    19,     9,   130,   131,
+     132,     0,     7,     8,     9,    10,     0,    98,    11,     0,
+      20,    12,    10,     0,    13,     0,     0,    14,    15,    16,
+      17,    13,    10,     0,    14,    15,    16,    17,     0,     0,
+       0,    13,     0,     0,    14,    15,    16,    17,     0,     0,
+       5,     0,     0,    18,     0,   155,     0,     0,     0,     0,
+      18,     0,     7,     8,     0,     0,     0,    19,     0,   161,
+      18,   163,     0,     0,    19,   164,     0,     5,     0,     0,
+       0,    20,    10,     0,    19,     0,     0,     0,    20,     7,
+       8,    13,     0,     0,    14,    15,    16,    17,    20,   111,
+     112,   113,   114,   115,     0,     0,     0,     0,     0,    10,
+       0,     0,     0,     0,     0,     0,     0,     0,    13,     0,
+      18,    14,    15,    16,    17,     0,     0,     0,     0,     0,
        0,     0,     0,     0,    19,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    20,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    19
+       0,    19,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    20
   };
 
   /* YYCHECK.  */
   const short int
   Parser::yycheck_[] =
   {
-         0,     6,     4,    68,     9,    68,    11,     3,   107,    91,
-      97,   107,    99,   135,    19,    17,    98,     3,    78,    15,
-      80,    21,   107,    19,    20,    85,   148,   126,    88,    15,
-     126,    27,   110,    19,    30,    92,    93,   117,   118,    68,
-     125,    27,     8,    39,    40,     0,    92,   125,   108,    95,
-      96,     3,    18,    39,    40,    51,   120,   121,   124,    64,
-     110,   126,   125,    59,   125,    51,   112,   113,   110,    65,
-      23,    24,    68,    59,   125,    71,    72,    73,    74,   126,
-     137,   126,    68,     4,    89,    71,    72,    73,    74,    91,
-      85,    86,    97,   150,    99,   152,    98,     3,     5,   156,
-     110,    97,    75,    76,    77,    78,    79,    24,    15,    87,
-      88,    97,    19,    20,   126,   111,   110,   126,   110,   110,
-      27,    21,   101,    30,   158,   111,    15,    91,   133,   125,
-      19,    20,    39,    40,   139,   135,    73,   127,    27,   125,
-     133,    30,    -1,    -1,    51,    -1,    -1,    -1,   148,    -1,
-      39,    40,    59,    -1,    -1,    -1,    15,    -1,    65,    -1,
-      19,    68,    51,    -1,    71,    72,    73,    74,    27,    -1,
-      59,    80,    81,    82,    83,    84,    65,    -1,    -1,    68,
-      39,    40,    71,    72,    73,    74,    -1,    -1,    -1,    -1,
-      97,    -1,    51,    -1,    -1,    -1,    -1,    -1,    27,    -1,
-      59,    -1,    -1,    -1,   111,    -1,    -1,    -1,    97,    68,
-      39,    40,    71,    72,    73,    74,    27,    -1,   125,    -1,
-      -1,    -1,   111,    -1,    -1,    -1,    -1,    -1,    39,    40,
-      59,    -1,    -1,    44,    -1,    -1,   125,    -1,    97,    68,
-      -1,    -1,    71,    72,    73,    74,    27,    -1,    59,    -1,
-      -1,    -1,   111,    -1,    -1,    -1,    -1,    68,    39,    40,
-      71,    72,    73,    74,    -1,    -1,   125,    -1,    97,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    27,    -1,    59,    -1,
-      -1,    -1,   111,    -1,    -1,    -1,    97,    68,    39,    40,
-      71,    72,    73,    74,    27,    -1,   125,   126,    -1,    -1,
-     111,    -1,    -1,    -1,    -1,    -1,    39,    -1,    59,    -1,
-      -1,    -1,    -1,    -1,   125,    -1,    97,    68,    -1,    -1,
-      71,    72,    73,    74,    -1,    -1,    59,    -1,    -1,    -1,
-     111,    -1,    -1,    -1,    -1,    68,    -1,    -1,    71,    72,
-      73,    74,    -1,    -1,   125,    -1,    -1,    -1,    -1,    -1,
+         0,     6,    68,    68,     9,    27,    11,    12,     3,    68,
+     107,   107,   110,     0,   101,    20,   103,    39,    40,   124,
+      15,   107,    22,     3,    19,    20,   125,   125,   125,     4,
+     126,    78,    27,    80,   140,    30,     8,    59,    85,   110,
+     126,    88,   110,    18,    39,    40,    68,    19,   154,    71,
+      72,    73,    74,   117,   118,    94,    51,   120,   121,   110,
+     126,   108,    67,   102,    59,   125,   125,    62,    27,   126,
+      65,    23,    24,    68,   126,    97,    71,    72,    73,    74,
+      39,     3,    78,    79,    80,    81,    82,    92,     4,   111,
+     131,   132,     3,    15,    88,    89,   101,    19,   103,   110,
+      59,    24,    97,   125,   126,    27,    90,    91,   126,    68,
+       5,   126,    71,    72,    73,    74,   111,    39,    40,    94,
+      15,   110,   110,    22,    19,    20,   105,   102,   110,    51,
+     125,   164,    27,   138,    94,    30,    76,    59,    92,   144,
+     140,    95,    96,    -1,    39,    40,    68,   138,    -1,    71,
+      72,    73,    74,    -1,   154,    -1,    51,    -1,   112,   113,
+      -1,    -1,    -1,    -1,    59,    -1,   125,    62,    -1,    -1,
+      65,    -1,    -1,    68,    -1,    97,    71,    72,    73,    74,
+      -1,    15,    -1,    -1,    -1,    19,    20,    -1,    15,   111,
+      -1,    -1,    19,    27,    -1,    -1,    30,    -1,    -1,    -1,
+      27,    -1,    97,   125,    -1,    39,    40,    -1,    -1,    -1,
+      27,    -1,    39,    40,    -1,    -1,   111,    51,    95,    96,
+      97,    -1,    39,    40,    51,    59,    -1,    44,    62,    -1,
+     125,    65,    59,    -1,    68,    -1,    -1,    71,    72,    73,
+      74,    68,    59,    -1,    71,    72,    73,    74,    -1,    -1,
+      -1,    68,    -1,    -1,    71,    72,    73,    74,    -1,    -1,
+      27,    -1,    -1,    97,    -1,   142,    -1,    -1,    -1,    -1,
+      97,    -1,    39,    40,    -1,    -1,    -1,   111,    -1,   156,
+      97,   158,    -1,    -1,   111,   162,    -1,    27,    -1,    -1,
+      -1,   125,    59,    -1,   111,    -1,    -1,    -1,   125,    39,
+      40,    68,    -1,    -1,    71,    72,    73,    74,   125,    83,
+      84,    85,    86,    87,    -1,    -1,    -1,    -1,    -1,    59,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    68,    -1,
+      97,    71,    72,    73,    74,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,   111,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,   125,    -1,
       -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-     111,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,   125,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,   125
+      -1,   111,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,   125
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1263,21 +1279,22 @@ namespace lury
   Parser::yystos_[] =
   {
          0,     3,    15,    19,    20,    27,    30,    39,    40,    51,
-      59,    65,    68,    71,    72,    73,    74,    97,   111,   125,
-     128,   129,   130,   131,   132,   134,   137,   140,   141,   145,
-     146,   147,   148,   149,   150,   151,   152,   153,   154,   155,
-     157,   158,   159,   160,   161,   162,   163,   164,   165,   166,
-     167,   168,   169,   170,   171,   172,   175,   176,   142,   150,
-     151,   160,   151,   151,   125,   143,   144,   150,   160,   151,
-       0,   130,     3,   124,   133,    78,    80,    85,    88,   108,
-      92,    95,    96,   112,   113,   117,   118,   120,   121,   125,
-     110,   125,   110,   110,    44,   151,   156,   125,   107,   125,
-     126,   145,   153,   153,   153,   153,   153,   162,   162,   162,
-     162,   162,   168,   168,   169,   169,   126,   151,   173,   174,
-       3,   132,   135,   126,   143,   144,   135,   135,   126,   156,
-     143,   156,   133,   107,   126,     4,     3,   110,   126,    23,
-      24,   138,   139,   139,   126,   126,   174,   131,   136,   135,
-     110,   151,   110,     5,   131,   135,   110,   135,   135,   138
+      59,    62,    65,    68,    71,    72,    73,    74,    97,   111,
+     125,   128,   129,   130,   131,   132,   134,   137,   140,   141,
+     142,   146,   147,   148,   149,   150,   151,   152,   153,   154,
+     155,   156,   158,   159,   160,   161,   162,   163,   164,   165,
+     166,   167,   168,   169,   170,   171,   172,   173,   176,   177,
+     143,   151,   152,   161,   152,   152,   152,   125,   144,   145,
+     151,   161,   152,     0,   130,     3,   124,   133,    78,    80,
+      85,    88,   108,    92,    95,    96,   112,   113,   117,   118,
+     120,   121,   125,   110,   125,   110,   110,   110,    44,   152,
+     157,   125,   107,   125,   126,   146,   154,   154,   154,   154,
+     154,   163,   163,   163,   163,   163,   169,   169,   170,   170,
+     126,   152,   174,   175,     3,   132,   135,   126,   144,   145,
+     135,   135,   135,   126,   157,   144,   157,   133,   107,   126,
+       4,     3,   110,   126,    23,    24,   138,   139,   139,   139,
+     126,   126,   175,   131,   136,   135,   110,   152,   110,     5,
+     131,   135,   110,   135,   135,   138
   };
 
 #if YYDEBUG
@@ -1307,16 +1324,16 @@ namespace lury
   Parser::yyr1_[] =
   {
          0,   127,   128,   128,   129,   129,   130,   130,   131,   131,
-     132,   132,   133,   133,   133,   134,   134,   134,   135,   135,
-     136,   136,   137,   137,   138,   138,   138,   139,   140,   140,
-     141,   141,   141,   142,   143,   144,   144,   145,   145,   145,
-     145,   146,   147,   147,   148,   149,   150,   151,   152,   152,
-     152,   152,   152,   152,   153,   154,   155,   155,   155,   155,
-     156,   156,   157,   158,   159,   160,   160,   160,   161,   161,
-     161,   161,   161,   161,   162,   163,   164,   165,   166,   167,
-     167,   167,   168,   168,   168,   169,   170,   171,   172,   172,
-     172,   173,   173,   174,   175,   175,   175,   175,   175,   175,
-     176,   176,   176,   176
+     132,   132,   133,   133,   133,   134,   134,   134,   134,   135,
+     135,   136,   136,   137,   137,   138,   138,   138,   139,   140,
+     140,   141,   141,   142,   142,   142,   143,   144,   145,   145,
+     146,   146,   146,   146,   147,   148,   148,   149,   150,   151,
+     152,   153,   153,   153,   153,   153,   153,   154,   155,   156,
+     156,   156,   156,   157,   157,   158,   159,   160,   161,   161,
+     161,   162,   162,   162,   162,   162,   162,   163,   164,   165,
+     166,   167,   168,   168,   168,   169,   169,   169,   170,   171,
+     172,   173,   173,   173,   174,   174,   175,   176,   176,   176,
+     176,   176,   176,   177,   177,   177,   177
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1324,16 +1341,16 @@ namespace lury
   Parser::yyr2_[] =
   {
          0,     2,     0,     1,     1,     2,     1,     1,     2,     1,
-       1,     2,     1,     2,     3,     1,     1,     1,     2,     4,
-       1,     2,     4,     5,     4,     5,     1,     3,     4,     5,
-       4,     6,     7,     1,     1,     1,     3,     1,     1,     1,
-       1,     1,     1,     2,     1,     1,     1,     1,     1,     3,
-       3,     3,     3,     3,     1,     1,     1,     5,     4,     5,
-       1,     1,     1,     1,     1,     1,     2,     2,     1,     3,
-       3,     3,     3,     3,     1,     1,     1,     1,     1,     1,
-       3,     3,     1,     3,     3,     1,     1,     1,     1,     3,
-       4,     1,     3,     1,     1,     1,     1,     1,     1,     3,
-       1,     1,     1,     1
+       1,     2,     1,     2,     3,     1,     1,     1,     1,     2,
+       4,     1,     2,     4,     5,     4,     5,     1,     3,     4,
+       5,     4,     5,     4,     6,     7,     1,     1,     1,     3,
+       1,     1,     1,     1,     1,     1,     2,     1,     1,     1,
+       1,     1,     3,     3,     3,     3,     3,     1,     1,     1,
+       5,     4,     5,     1,     1,     1,     1,     1,     1,     2,
+       2,     1,     3,     3,     3,     3,     3,     1,     1,     1,
+       1,     1,     1,     3,     3,     1,     3,     3,     1,     1,
+       1,     1,     3,     4,     1,     3,     1,     1,     1,     1,
+       1,     1,     3,     1,     1,     1,     1
   };
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
@@ -1372,18 +1389,18 @@ namespace lury
   "'.'", "';'", "'('", "')'", "$accept", "program", "program_lines",
   "program_line", "statement", "statement_list", "simple_statements",
   "compound_statement", "suite", "statements", "if_statement",
-  "elif_statements", "else_statement", "while_statement",
-  "function_definition", "function_name", "parameter", "parameter_list",
-  "simple_statement", "expression_statement", "return_statement",
-  "break_statement", "continue_statement", "identifier_all", "expression",
-  "assignment_expression", "comma_expression", "generator_expression",
-  "lambda_expression", "lambda_body", "conditional_expression",
-  "bool_or_expression", "bool_and_expression", "bool_not_expression",
-  "comparison_expression", "range_expression", "or_expression",
-  "xor_expression", "and_expression", "shift_expression",
-  "addition_expression", "multiplication_expression", "unary_expression",
-  "power_expression", "callref_expression", "postfix_expression",
-  "argument_list", "argument", "primary", "literal", 0
+  "elif_statements", "else_statement", "unless_statement",
+  "while_statement", "function_definition", "function_name", "parameter",
+  "parameter_list", "simple_statement", "expression_statement",
+  "return_statement", "break_statement", "continue_statement",
+  "identifier_all", "expression", "assignment_expression",
+  "comma_expression", "generator_expression", "lambda_expression",
+  "lambda_body", "conditional_expression", "bool_or_expression",
+  "bool_and_expression", "bool_not_expression", "comparison_expression",
+  "range_expression", "or_expression", "xor_expression", "and_expression",
+  "shift_expression", "addition_expression", "multiplication_expression",
+  "unary_expression", "power_expression", "callref_expression",
+  "postfix_expression", "argument_list", "argument", "primary", "literal", 0
   };
 #endif
 
@@ -1394,35 +1411,36 @@ namespace lury
   {
        128,     0,    -1,    -1,   129,    -1,   130,    -1,   129,   130,
       -1,   131,    -1,     3,    -1,   132,     3,    -1,   134,    -1,
-     145,    -1,   145,   133,    -1,   124,    -1,   124,   145,    -1,
-     124,   145,   133,    -1,   137,    -1,   140,    -1,   141,    -1,
-     132,     3,    -1,     3,     4,   136,     5,    -1,   131,    -1,
-     136,   131,    -1,    30,   151,   110,   135,    -1,    30,   151,
-     110,   135,   138,    -1,    23,   151,   110,   135,    -1,    23,
-     151,   110,   135,   138,    -1,   139,    -1,    24,   110,   135,
-      -1,    65,   151,   110,   135,    -1,    65,   151,   110,   135,
-     139,    -1,    20,   142,   110,   135,    -1,    20,   142,   125,
-     126,   110,   135,    -1,    20,   142,   125,   144,   126,   110,
-     135,    -1,   150,    -1,   150,    -1,   143,    -1,   144,   107,
-     143,    -1,   146,    -1,   147,    -1,   148,    -1,   149,    -1,
-     151,    -1,    51,    -1,    51,   151,    -1,    15,    -1,    19,
-      -1,    68,    -1,   152,    -1,   153,    -1,   152,   108,   153,
-      -1,   152,    78,   153,    -1,   152,    80,   153,    -1,   152,
-      85,   153,    -1,   152,    88,   153,    -1,   154,    -1,   155,
-      -1,   157,    -1,    97,   143,   125,   156,   126,    -1,    97,
-     125,   156,   126,    -1,    97,   144,   125,   156,   126,    -1,
-     151,    -1,    44,    -1,   158,    -1,   159,    -1,   160,    -1,
-     161,    -1,    40,   160,    -1,   111,   160,    -1,   162,    -1,
-     161,   113,   162,    -1,   161,   112,   162,    -1,   161,    92,
-     162,    -1,   161,    95,   162,    -1,   161,    96,   162,    -1,
-     163,    -1,   164,    -1,   165,    -1,   166,    -1,   167,    -1,
-     168,    -1,   167,   117,   168,    -1,   167,   118,   168,    -1,
-     169,    -1,   168,   120,   169,    -1,   168,   121,   169,    -1,
-     170,    -1,   171,    -1,   172,    -1,   175,    -1,   172,   125,
-     126,    -1,   172,   125,   173,   126,    -1,   174,    -1,   173,
-     107,   174,    -1,   151,    -1,   150,    -1,   176,    -1,    59,
-      -1,    27,    -1,    39,    -1,   125,   151,   126,    -1,    74,
-      -1,    71,    -1,    72,    -1,    73,    -1
+     146,    -1,   146,   133,    -1,   124,    -1,   124,   146,    -1,
+     124,   146,   133,    -1,   137,    -1,   140,    -1,   141,    -1,
+     142,    -1,   132,     3,    -1,     3,     4,   136,     5,    -1,
+     131,    -1,   136,   131,    -1,    30,   152,   110,   135,    -1,
+      30,   152,   110,   135,   138,    -1,    23,   152,   110,   135,
+      -1,    23,   152,   110,   135,   138,    -1,   139,    -1,    24,
+     110,   135,    -1,    62,   152,   110,   135,    -1,    62,   152,
+     110,   135,   139,    -1,    65,   152,   110,   135,    -1,    65,
+     152,   110,   135,   139,    -1,    20,   143,   110,   135,    -1,
+      20,   143,   125,   126,   110,   135,    -1,    20,   143,   125,
+     145,   126,   110,   135,    -1,   151,    -1,   151,    -1,   144,
+      -1,   145,   107,   144,    -1,   147,    -1,   148,    -1,   149,
+      -1,   150,    -1,   152,    -1,    51,    -1,    51,   152,    -1,
+      15,    -1,    19,    -1,    68,    -1,   153,    -1,   154,    -1,
+     153,   108,   154,    -1,   153,    78,   154,    -1,   153,    80,
+     154,    -1,   153,    85,   154,    -1,   153,    88,   154,    -1,
+     155,    -1,   156,    -1,   158,    -1,    97,   144,   125,   157,
+     126,    -1,    97,   125,   157,   126,    -1,    97,   145,   125,
+     157,   126,    -1,   152,    -1,    44,    -1,   159,    -1,   160,
+      -1,   161,    -1,   162,    -1,    40,   161,    -1,   111,   161,
+      -1,   163,    -1,   162,   113,   163,    -1,   162,   112,   163,
+      -1,   162,    92,   163,    -1,   162,    95,   163,    -1,   162,
+      96,   163,    -1,   164,    -1,   165,    -1,   166,    -1,   167,
+      -1,   168,    -1,   169,    -1,   168,   117,   169,    -1,   168,
+     118,   169,    -1,   170,    -1,   169,   120,   170,    -1,   169,
+     121,   170,    -1,   171,    -1,   172,    -1,   173,    -1,   176,
+      -1,   173,   125,   126,    -1,   173,   125,   174,   126,    -1,
+     175,    -1,   174,   107,   175,    -1,   152,    -1,   151,    -1,
+     177,    -1,    59,    -1,    27,    -1,    39,    -1,   125,   152,
+     126,    -1,    74,    -1,    71,    -1,    72,    -1,    73,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1431,16 +1449,16 @@ namespace lury
   Parser::yyprhs_[] =
   {
          0,     0,     3,     4,     6,     8,    11,    13,    15,    18,
-      20,    22,    25,    27,    30,    34,    36,    38,    40,    43,
-      48,    50,    53,    58,    64,    69,    75,    77,    81,    86,
-      92,    97,   104,   112,   114,   116,   118,   122,   124,   126,
-     128,   130,   132,   134,   137,   139,   141,   143,   145,   147,
-     151,   155,   159,   163,   167,   169,   171,   173,   179,   184,
-     190,   192,   194,   196,   198,   200,   202,   205,   208,   210,
-     214,   218,   222,   226,   230,   232,   234,   236,   238,   240,
-     242,   246,   250,   252,   256,   260,   262,   264,   266,   268,
-     272,   277,   279,   283,   285,   287,   289,   291,   293,   295,
-     299,   301,   303,   305
+      20,    22,    25,    27,    30,    34,    36,    38,    40,    42,
+      45,    50,    52,    55,    60,    66,    71,    77,    79,    83,
+      88,    94,    99,   105,   110,   117,   125,   127,   129,   131,
+     135,   137,   139,   141,   143,   145,   147,   150,   152,   154,
+     156,   158,   160,   164,   168,   172,   176,   180,   182,   184,
+     186,   192,   197,   203,   205,   207,   209,   211,   213,   215,
+     218,   221,   223,   227,   231,   235,   239,   243,   245,   247,
+     249,   251,   253,   255,   259,   263,   265,   269,   273,   275,
+     277,   279,   281,   285,   290,   292,   296,   298,   300,   302,
+     304,   306,   308,   312,   314,   316,   318
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
@@ -1448,16 +1466,16 @@ namespace lury
   Parser::yyrline_[] =
   {
          0,   128,   128,   132,   139,   140,   154,   155,   161,   165,
-     168,   169,   183,   187,   191,   205,   207,   210,   215,   219,
-     226,   227,   241,   245,   251,   255,   259,   262,   272,   276,
-     298,   303,   308,   318,   323,   326,   333,   378,   381,   382,
-     383,   390,   393,   397,   403,   409,   430,   446,   449,   450,
-     454,   458,   462,   466,   481,   485,   489,   490,   497,   502,
-     510,   511,   517,   523,   528,   533,   534,   538,   544,   545,
-     549,   553,   557,   561,   578,   583,   587,   591,   595,   600,
-     601,   605,   612,   613,   618,   625,   633,   637,   641,   645,
-     650,   658,   664,   672,   679,   680,   681,   685,   689,   695,
-     702,   708,   712,   716
+     168,   169,   183,   187,   191,   205,   206,   207,   210,   215,
+     219,   226,   227,   241,   245,   251,   255,   259,   262,   268,
+     272,   278,   282,   304,   309,   314,   324,   329,   332,   339,
+     384,   387,   388,   389,   396,   399,   403,   409,   415,   436,
+     452,   455,   456,   460,   464,   468,   472,   487,   491,   495,
+     496,   503,   508,   516,   517,   523,   529,   534,   539,   540,
+     544,   550,   551,   555,   559,   563,   567,   584,   589,   593,
+     597,   601,   606,   607,   611,   618,   619,   624,   631,   639,
+     643,   647,   651,   656,   664,   670,   678,   685,   686,   687,
+     691,   695,   701,   708,   714,   718,   722
   };
 
   // Print the state stack on the debug stream.
@@ -1542,10 +1560,10 @@ namespace lury
   }
 
   const int Parser::yyeof_ = 0;
-  const int Parser::yylast_ = 392;
-  const int Parser::yynnts_ = 50;
+  const int Parser::yylast_ = 385;
+  const int Parser::yynnts_ = 51;
   const int Parser::yyempty_ = -2;
-  const int Parser::yyfinal_ = 70;
+  const int Parser::yyfinal_ = 73;
   const int Parser::yyterror_ = 1;
   const int Parser::yyerrcode_ = 256;
   const int Parser::yyntokens_ = 127;
@@ -1555,7 +1573,7 @@ namespace lury
 
 } // namespace lury
 
-#line 763 "lury.ypp"
+#line 769 "lury.ypp"
 
 
 void lury::Parser::error(const Parser::location_type& l, const std::string& m) {

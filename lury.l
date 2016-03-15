@@ -138,6 +138,7 @@ void printStack(STACK* stack) {
 "if" return token::KeywordIf;
 "elif" return token::KeywordElif;
 "else" return token::KeywordElse;
+"unless" return token::KeywordUnless;
 "<=" return token::LessThan;
 ">=" return token::MoreThan;
 "==" return token::Equal;

@@ -83,7 +83,7 @@
 %type <ast> power_expression addition_expression expression postfix_expression
 %type <ast> literal primary statements range_expression comparison_expression
 %type <ast> program program_lines program_line bool_not_expression
-%type <ast> if_statement elif_statements else_statement suite while_statement
+%type <ast> if_statement elif_statements else_statement suite while_statement unless_statement
 %type <ast> simple_statement simple_statements return_statement continue_statement break_statement
 %type <ast> identifier_all function_name lambda_expression lambda_body
 %type <ast> assignment_expression comma_expression
@@ -203,7 +203,7 @@ simple_statements
 
 compound_statement
 	: if_statement
-	// | unless_statement
+	| unless_statement
 	| while_statement
 	// | for_statement
 	// | try_statement
@@ -264,9 +264,15 @@ else_statement
 		$$ = $3;
 	}
 
-// unless_statement
-// 	: KeywordUnless expression ':' suite
-// 	| KeywordUnless expression ':' suite else_statement
+unless_statement
+	: KeywordUnless expression ':' suite
+	{
+		$$ = new IfStatementAST(new NotAST($2), $4);
+	}
+	| KeywordUnless expression ':' suite else_statement
+	{
+		$$ = new IfStatementAST(new NotAST($2), $4, $5);
+	}
 
 while_statement
 	: KeywordWhile expression ':' suite
