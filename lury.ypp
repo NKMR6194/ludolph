@@ -632,7 +632,10 @@ multiplication_expression
 	{
 		$$ = new BinaryOpAST($1, $3, OpDiv);
 	}
-	// | multiplication_expression '%' unary_expression
+	| multiplication_expression '%' unary_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpMod)
+	}
 
 unary_expression
 	: power_expression

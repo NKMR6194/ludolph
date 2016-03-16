@@ -20,6 +20,9 @@ ASTExit BinaryOpAST::eval(LuryContext *context) {
 		case OpDiv:
 			obj = lhs_obj->div(rhs_obj);
 			break;
+		case OpMod:
+			obj = lhs_obj->mod(rhs_obj);
+			break;
 		case OpEqual:
 			obj = lhs_obj->equal(rhs_obj);
 			break;

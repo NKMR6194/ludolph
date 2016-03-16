@@ -1,4 +1,5 @@
 #include "../include/object.hpp"
+#include <cmath>
 
 LuryObject* LuryInteger::add(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
@@ -58,6 +59,18 @@ LuryObject* LuryInteger::div(LuryObject *obj) {
 		return new LuryFloating((double)value / i->getValue());
 	}
 	throw "add not impliment other object";
+}
+
+LuryObject* LuryInteger::mod(LuryObject *obj) {
+	if (LuryInteger::classof(obj)) {
+		LuryInteger *i = (LuryInteger *)obj;
+		return new LuryInteger(value % i->value);
+	}
+	else if (LuryFloating::classof(obj)) {
+		LuryFloating *i = (LuryFloating *)obj;
+		return new LuryFloating(fmod(value, i->getValue()));
+	}
+	throw "mod not implement other object";
 }
 
 LuryObject* LuryInteger::equal(LuryObject *obj) {
@@ -208,6 +221,18 @@ LuryObject* LuryFloating::div(LuryObject *obj) {
 		return new LuryFloating(value / i->getValue());
 	}
 	throw "add not impliment other object";
+}
+
+LuryObject* LuryFloating::mod(LuryObject *obj) {
+	if (LuryFloating::classof(obj)) {
+		LuryFloating *i = (LuryFloating *)obj;
+		return new LuryFloating(fmod(value, i->value));
+	}
+	else if (LuryInteger::classof(obj)) {
+		LuryInteger *i = (LuryInteger *)obj;
+		return new LuryFloating(fmod(value, i->getValue()));
+	}
+	throw "mod not implement other object";
 }
 
 LuryObject* LuryFloating::equal(LuryObject *obj) {

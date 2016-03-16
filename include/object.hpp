@@ -31,6 +31,7 @@ public:
 	virtual LuryObject* sub(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* mul(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* div(LuryObject *obj) { throw "add not impliment in object"; }
+	virtual LuryObject* mod(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* equal(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* notEqual(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* less(LuryObject *obj) { throw "add not impliment in object"; }
@@ -67,6 +68,7 @@ public:
 	LuryObject* sub(LuryObject *obj);
 	LuryObject* mul(LuryObject *obj);
 	LuryObject* div(LuryObject *obj);
+	LuryObject* mod(LuryObject *obj);
 	LuryObject* equal(LuryObject *obj);
 	LuryObject* notEqual(LuryObject *obj);
 	LuryObject* less(LuryObject *obj);
@@ -90,6 +92,7 @@ public:
 	LuryObject* sub(LuryObject *obj);
 	LuryObject* mul(LuryObject *obj);
 	LuryObject* div(LuryObject *obj);
+	LuryObject* mod(LuryObject *obj);
 	LuryObject* equal(LuryObject *obj);
 	LuryObject* notEqual(LuryObject *obj);
 	LuryObject* less(LuryObject *obj);
