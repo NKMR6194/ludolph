@@ -41,6 +41,9 @@ ASTExit BinaryOpAST::eval(LuryContext *context) {
 		case OpGreaterOrEqual:
 			obj = lhs_obj->greaterOrEqual(rhs_obj);
 			break;
+		case OpOr:
+			obj = lhs_obj->luryOr(rhs_obj);
+			break;
 		default:
 			throw "not support this operation";
 	}

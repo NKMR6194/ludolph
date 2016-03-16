@@ -43,7 +43,8 @@ enum OpID {
 	OpLess,
 	OpLessOrEqual,
 	OpGreater,
-	OpGreaterOrEqual
+	OpGreaterOrEqual,
+	OpOr
 };
 
 class AST {

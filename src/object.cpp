@@ -1,6 +1,10 @@
 #include "../include/object.hpp"
 #include <cmath>
 
+LuryObject* LuryObject::luryOr(LuryObject *obj) {
+	return new LuryBoolean(this->isTrue() || obj->isTrue());
+}
+
 LuryObject* LuryInteger::add(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;

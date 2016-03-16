@@ -157,6 +157,7 @@ void printStack(STACK* stack) {
 "/=" return token::AssignmentDivide;
 "not" return token::KeywordNot;
 "=>" return token::Lambda;
+"||" return token::KeywordOr;
 
 [0-9]+ {
 	yylval->int_value = atoi(yytext);

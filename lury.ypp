@@ -82,7 +82,7 @@
 %type <ast> statement statement_list multiplication_expression unary_expression
 %type <ast> power_expression addition_expression expression postfix_expression
 %type <ast> literal primary statements range_expression comparison_expression
-%type <ast> program program_lines program_line bool_not_expression
+%type <ast> program program_lines program_line bool_not_expression bool_and_expression
 %type <ast> if_statement elif_statements else_statement suite while_statement unless_statement
 %type <ast> simple_statement simple_statements return_statement continue_statement break_statement
 %type <ast> identifier_all function_name lambda_expression lambda_body
@@ -530,7 +530,10 @@ conditional_expression
 
 bool_or_expression
 	: bool_and_expression
-	// | bool_or_expression KeywordOr bool_and_expression
+	| bool_or_expression KeywordOr bool_and_expression
+	{
+		$$ = new BinaryOpAST($1, $3, OpOr);
+	}
 	// | bool_or_expression OrShort bool_and_expression
 
 bool_and_expression

@@ -38,6 +38,7 @@ public:
 	virtual LuryObject* lessOrEqual(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* greater(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject* greaterOrEqual(LuryObject *obj) { throw "add not impliment in object"; }
+	LuryObject* luryOr(LuryObject *obj);
 	virtual string to_s() {}
 	virtual bool isTrue() { return true; }
 	ClassID getClassID() const { return cid; }
