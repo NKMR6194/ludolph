@@ -62,6 +62,12 @@ LuryObject* LuryInteger::div(LuryObject *obj) {
 		LuryFloating *i = (LuryFloating *)obj;
 		return new LuryFloating((double)value / i->getValue());
 	}
+	else if (LuryComplex::classof(obj)) {
+		LuryComplex *i = (LuryComplex *)obj;
+		double denominator = i->getReal() * i->getReal() + i->getImaginary() * i->getImaginary();
+		LuryComplex *numerator = (LuryComplex *)mul(i->conjugate());
+		return new LuryComplex(numerator->getReal() / denominator, numerator->getImaginary() / denominator);
+	}
 	throw "add not impliment other object";
 }
 
