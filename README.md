@@ -1,4 +1,4 @@
-# Ludoplh
+# Ludolph
 
 A Lury interpreter
 
@@ -21,11 +21,11 @@ Ludolph is an implementation of Lury using C++.
 
 ## Contributing
 
-Please report bugs to [issue tracker](https://github.com/lury-lang/lury/issues) in Japanese or English.
+Please report bugs to [issue tracker](https://github.com/NKMR6194/ludolph/issues) in Japanese or English.
 
 ## License
 
-[MIT License](../master/README.md)
+[MIT License](../master/LICENSE)
 
 ## The Auther
 
