@@ -10,3 +10,5 @@ position.hh
 stack.hh
 
 test.lr
+
+*.o

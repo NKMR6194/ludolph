@@ -1,5 +1,4 @@
-#ifndef LUDOLPH_CONTEXT_HPP
-#define LUDOLPH_CONTEXT_HPP
+#pragma once
 
 #include <unordered_map>
 
@@ -14,5 +13,3 @@ public:
 	LuryContext* copy() { return new LuryContext(env); }
 	void set(string key, LuryObject *value) { env[key] = value; }
 };
-
-#endif

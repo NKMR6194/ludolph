@@ -1,9 +1,15 @@
-#ifndef LUDOLPH_AST_HPP
-#define LUDOLPH_AST_HPP
+#pragma once
 
 #include <iostream>
 #include <list>
 #include "object.hpp"
+#include "nil.hpp"
+#include "integer.hpp"
+#include "string.hpp"
+#include "floating.hpp"
+#include "complex.hpp"
+#include "boolean.hpp"
+#include "lambda.hpp"
 #include "context.hpp"
 #include "ast_exit.hpp"
 
@@ -24,6 +30,7 @@ enum AstID {
 	CompoundID,
 	IdentifierID,
 	FunctionID,
+	ClassID,
 	CallID,
 	ReturnStatementID,
 	ContinueStatementID,
@@ -54,7 +61,7 @@ public:
 	virtual ~AST() {}
 	AstID getValueID() const { return ID; }
 	virtual void print() {}
-	virtual ASTExit eval(LuryContext *context) {}
+	virtual ASTExit eval(LuryContext *context) { throw "not implement eval"; };
 };
 
 class BinaryOpAST : public AST {
@@ -142,7 +149,7 @@ class NilLitAST : public AST {
 public:
 	NilLitAST() : AST(NilLitID) {}
 	~NilLitAST() {}
-	ASTExit eval(LuryContext *context) { return ASTExit(new LuryNil(), NomalExit); }
+	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)new LuryNil(), NomalExit); }
 };
 
 class BooleanLitAST : public AST {
@@ -150,7 +157,7 @@ class BooleanLitAST : public AST {
 public:
 	BooleanLitAST(bool value) : AST (BooleanLitID), value(value) {}
 	~BooleanLitAST() {}
-	ASTExit eval(LuryContext *context) { return ASTExit(new LuryBoolean(value), NomalExit); }
+	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)new LuryBoolean(value), NomalExit); }
 };
 
 class LambdaLitAST : public AST {
@@ -160,7 +167,7 @@ public:
 	LambdaLitAST(list<string> params, AST *expr) : AST (LambdaLitID), params(params), expr(expr) {}
 	~LambdaLitAST() {}
 	ASTExit eval(LuryContext *context) {
-		return ASTExit(new LuryLambda(params, expr), NomalExit);
+		return ASTExit((LuryObject *)new LuryLambda(params, expr), NomalExit);
 	}
 };
 
@@ -235,6 +242,13 @@ public:
 	ASTExit eval(LuryContext *context);
 };
 
+class ClassStatementAST : public AST {
+	string name;
+public:
+	ClassStatementAST(string name) : AST(ClassID), name(name) {};
+	ASTExit eval(LuryContext *context);
+};
+
 class CallAST : public AST {
 	AST *callee;
 	list<AST *>args;
@@ -281,5 +295,3 @@ public:
 	~NotAST() {}
 	ASTExit eval(LuryContext *context);
 };
-
-#endif

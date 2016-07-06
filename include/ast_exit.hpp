@@ -1,5 +1,4 @@
-#ifndef LUDOLPH_AST_EXIST_HPP
-#define LUDOLPH_AST_EXIST_HPP
+#pragma once
 
 #include "object.hpp"
 
@@ -22,5 +21,3 @@ public:
 	ASTExitReason getExitReason() { return exit_reason; }
 	LuryObject* getReturnValue() { return return_value; }
 };
-
-#endif

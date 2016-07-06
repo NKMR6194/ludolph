@@ -52,14 +52,15 @@
 
 /* Keyword */
 %token KeywordAbstract KeywordAnd KeywordBreak KeywordCase KeywordCatch KeywordClass
-%token KeywordContinue KeywordDef KeywordDefault KeywordDelete KeywordElif KeywordElse
-%token KeywordEnum KeywordExtended KeywordFalse KeywordFinally KeywordFor KeywordIf
+%token KeywordContinue KeywordDef KeywordDefault KeywordDelete
+%token KeywordIf KeywordElif KeywordElse KeywordUnless
+%token KeywordEnum KeywordExtended KeywordFalse KeywordFinally KeywordFor
 %token KeywordImport KeywordIn KeywordInterface KeywordInvariant KeywordIs KeywordLazy
 %token KeywordNameof KeywordNew KeywordNil KeywordNot KeywordOr KeywordOut KeywordOverride
 %token KeywordPass KeywordPrivate KeywordProperty KeywordProtected KeywordPublic
 %token KeywordRef KeywordReflect KeywordReturn KeywordScope KeywordSealed KeywordStatic
 %token KeywordSuper KeywordSwitch KeywordThis KeywordThrow KeywordTrue KeywordTry
-%token KeywordUnittest KeywordUnless KeywordUntil KeywordVar KeywordWhile KeywordWith
+%token KeywordUnittest KeywordUntil KeywordVar KeywordWhile KeywordWith
 %token KeywordYield
 
 /* Identifier */
@@ -87,7 +88,7 @@
 %type <ast> simple_statement simple_statements return_statement continue_statement break_statement
 %type <ast> identifier_all function_name lambda_expression lambda_body
 %type <ast> assignment_expression comma_expression conditional_expression bool_or_expression
-%type <ast> function_definition argument
+%type <ast> function_definition argument class_name class_definition pass_statement
 %type <param_list> parameter_list
 %type <string_value> parameter
 %type <arg_list> argument_list
@@ -208,7 +209,7 @@ compound_statement
 	// | for_statement
 	// | try_statement
 	| function_definition
-	// | class_definition
+	| class_definition
 	// | unittest_statement
 
 suite
@@ -344,15 +345,19 @@ parameter_list
 			$$ = l;
 	}
 
-// class_definition
-// 	: KeywordClass class_name ':' suite
+class_definition
+	: KeywordClass class_name ':' suite
+	{
+		IdentifierAST *ident = (IdentifierAST *)$2;
+		$$ = new ClassStatementAST(ident->getValue());
+	}
 // 	| KeywordClass class_name '(' inheritance_list ')' ':' suite
 // 	| annotation_list KeywordClass class_name ':' suite
 // 	| annotation_list KeywordClass class_name '(' inheritance_list ')' ':' suite
-//
-// class_name
-// 	: identifier_all
-//
+
+class_name
+	: identifier_all
+
 // inheritance_list
 // 	: object_name
 // 	| inheritance_list ',' object_name
@@ -381,16 +386,18 @@ parameter_list
 // 	: KeywordUnittest ':' suite
 
 simple_statement
-	: expression_statement
-	// : pass_statement
-	// | expression_statement
+	: pass_statement
+	| expression_statement
 	| return_statement
 	| break_statement
 	| continue_statement
 	// | import_statement
 
-// pass_statement
-// 	: KeywordPass
+pass_statement
+	: KeywordPass
+	{
+		$$ = new NilLitAST();
+	}
 
 expression_statement
 	: expression

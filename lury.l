@@ -158,6 +158,8 @@ void printStack(STACK* stack) {
 "not" return token::KeywordNot;
 "=>" return token::Lambda;
 "||" return token::KeywordOr;
+"class" return token::KeywordClass;
+"pass" return token::KeywordPass;
 
 [0-9]+ {
 	yylval->int_value = atoi(yytext);
@@ -189,7 +191,7 @@ void printStack(STACK* stack) {
 	return token::NewLine;
 }
 
-[a-z][a-zA-Z0-9]* {
+[a-zA-Z][a-zA-Z0-9]* {
 	yylval->string_value = new string(yytext);
 	return token::Identifier;
 }

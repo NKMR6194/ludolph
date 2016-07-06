@@ -1,8 +1,5 @@
 #include <iostream>
-#include <string>
-#include "../include/driver.hpp"
-#include "../include/ast.hpp"
-#include "../include/context.hpp"
+#include "../include/lury.hpp"
 
 using namespace std;
 
@@ -14,6 +11,8 @@ int main (int argc, char* argv[]) {
 		cout << "need file path" << endl;
 		return 0;
 	}
+
+	luryInit();
 
 	file_path = string(argv[1]);
 	if (drive.parse_file(file_path)) {
