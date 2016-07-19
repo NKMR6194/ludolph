@@ -16,8 +16,9 @@ int main (int argc, char* argv[]) {
 
 	file_path = string(argv[1]);
 	if (drive.parse_file(file_path)) {
-		LuryContext *context = new LuryContext();
-		context->set("puts", new LuryFunction([](LuryObject *obj){ cout << obj->to_s() << endl; }));
+		LuryClass mother("main");
+		LuryContext *context = new LuryContext(&mother);
+		context->setMethod("puts", new LuryFunction([](LuryObject *obj){ cout << obj->to_s() << endl; }));
 		drive.ast->eval(context);
 	}
 

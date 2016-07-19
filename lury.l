@@ -159,6 +159,7 @@ void printStack(STACK* stack) {
 "=>" return token::Lambda;
 "||" return token::KeywordOr;
 "class" return token::KeywordClass;
+"new" return token::KeywordNew;
 "pass" return token::KeywordPass;
 
 [0-9]+ {

@@ -128,19 +128,31 @@ ASTExit CompoundAST::eval(LuryContext *context) {
 
 ASTExit IdentifierAST::eval(LuryContext *context) {
 	LuryObject *obj = context->get(value);
+	if (obj == NULL) {
+		obj = (LuryObject *)context->getMethod(value);
+	}
 	ASTExit ast_exit(obj, NomalExit);
 	return ast_exit;
 }
 
 ASTExit FunctionStatementAST::eval(LuryContext *context) {
-	context->set(name, new LuryFunction(params, proc));
+	context->setMethod(name, new LuryFunction(params, proc));
 	ASTExit ast_exit(new LuryBoolean(true), NomalExit);
 	return ast_exit;
 }
 
 ASTExit ClassStatementAST::eval(LuryContext *context) {
-	context->set(name, new LuryClass(name));
+	LuryClass *klass = new LuryClass(name);
+	context->set(name, klass);
+	suit->eval(context->copy(klass));
 	return ASTExit(new LuryNil(), NomalExit);
+}
+
+ASTExit CreateInstanceAST::eval(LuryContext *context) {
+	LuryClass *klass = (LuryClass *)context->get(name);
+	LuryObject *obj = new LuryObject;
+	obj->setClass(klass);
+	return ASTExit(obj, NomalExit);
 }
 
 ASTExit CallAST::eval(LuryContext *context) {

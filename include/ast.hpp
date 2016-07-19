@@ -31,6 +31,7 @@ enum AstID {
 	IdentifierID,
 	FunctionID,
 	ClassID,
+	CreateInstanceID,
 	CallID,
 	ReturnStatementID,
 	ContinueStatementID,
@@ -244,8 +245,16 @@ public:
 
 class ClassStatementAST : public AST {
 	string name;
+	AST *suit;
 public:
-	ClassStatementAST(string name) : AST(ClassID), name(name) {};
+	ClassStatementAST(string name, AST *suit) : AST(ClassID), name(name), suit(suit) {};
+	ASTExit eval(LuryContext *context);
+};
+
+class CreateInstanceAST : public AST {
+	string name;
+public:
+	CreateInstanceAST(string name) : AST(CreateInstanceID), name(name) {};
 	ASTExit eval(LuryContext *context);
 };
 

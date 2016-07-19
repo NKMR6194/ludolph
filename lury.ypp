@@ -349,7 +349,7 @@ class_definition
 	: KeywordClass class_name ':' suite
 	{
 		IdentifierAST *ident = (IdentifierAST *)$2;
-		$$ = new ClassStatementAST(ident->getValue());
+		$$ = new ClassStatementAST(ident->getValue(), $4);
 	}
 // 	| KeywordClass class_name '(' inheritance_list ')' ':' suite
 // 	| annotation_list KeywordClass class_name ':' suite
@@ -668,6 +668,11 @@ postfix_expression
 	// | postfix_expression '.' identifier_all
 	// | postfix_expression Increment
 	// | postfix_expression Decrement
+	| KeywordNew class_name
+	{
+		IdentifierAST *ident = (IdentifierAST *)$2;
+		$$ = new CreateInstanceAST(ident->getValue());
+	}
 	| postfix_expression '(' ')'
 	{
 			list<AST *> empty;
