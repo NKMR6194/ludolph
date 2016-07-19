@@ -5,7 +5,7 @@
 using namespace std;
 
 class LuryContext {
-	unordered_map<string, LuryObject *>  env;
+	unordered_map<string, LuryObject *> env;
 public:
 	LuryContext() {}
 	LuryContext(unordered_map<string, LuryObject *> env) : env(env) {}
