@@ -12,3 +12,5 @@ stack.hh
 test.lr
 
 *.o
+
+*.so

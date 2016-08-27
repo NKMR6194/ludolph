@@ -26,6 +26,7 @@ enum AstID {
 	NilLitID,
 	BooleanLitID,
 	LambdaLitID,
+	ImportID,
 	IfStatementID,
 	CompoundID,
 	IdentifierID,
@@ -302,5 +303,13 @@ class NotAST : public AST {
 public:
 	NotAST(AST *expr) : AST(NotID), expr(expr) {}
 	~NotAST() {}
+	ASTExit eval(LuryContext *context);
+};
+
+class ImportAST : public AST {
+	IdentifierAST *ident;
+public:
+	ImportAST(AST *ident) : AST(ImportID), ident((IdentifierAST *)ident) {}
+	~ImportAST() {}
 	ASTExit eval(LuryContext *context);
 };

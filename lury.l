@@ -161,6 +161,7 @@ void printStack(STACK* stack) {
 "class" return token::KeywordClass;
 "new" return token::KeywordNew;
 "pass" return token::KeywordPass;
+"import" return token::KeywordImport;
 
 [0-9]+ {
 	yylval->int_value = atoi(yytext);

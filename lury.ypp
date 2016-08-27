@@ -88,7 +88,7 @@
 %type <ast> simple_statement simple_statements return_statement continue_statement break_statement
 %type <ast> identifier_all function_name lambda_expression lambda_body
 %type <ast> assignment_expression comma_expression conditional_expression bool_or_expression
-%type <ast> function_definition argument class_name class_definition pass_statement
+%type <ast> function_definition argument class_name class_definition pass_statement import_statement import_names import_name
 %type <param_list> parameter_list
 %type <string_value> parameter
 %type <arg_list> argument_list
@@ -391,7 +391,7 @@ simple_statement
 	| return_statement
 	| break_statement
 	| continue_statement
-	// | import_statement
+	| import_statement
 
 pass_statement
 	: KeywordPass
@@ -424,19 +424,22 @@ continue_statement
 		$$ = new ContinueStatementAST();
 	}
 
-// import_statement
-// 	: KeywordImport import_names
+import_statement
+	: KeywordImport import_names
+	{
+		$$ = new ImportAST($2);
+	}
 // 	| KeywordPublic KeywordImport import_names
-//
-// import_names
-// 	: import_name
+
+import_names
+	: import_name
 // 	| import_names ',' import_name
-//
-// import_name
-// 	: module_name
-//
-// module_name
-// 	: identifier_all
+
+import_name
+	: module_name
+
+module_name
+	: identifier_all
 // 	| module_name '.' identifier_all
 
 identifier_all

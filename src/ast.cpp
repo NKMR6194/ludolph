@@ -150,7 +150,7 @@ ASTExit ClassStatementAST::eval(LuryContext *context) {
 
 ASTExit CreateInstanceAST::eval(LuryContext *context) {
 	LuryClass *klass = (LuryClass *)context->get(name);
-	LuryObject *obj = new LuryObject;
+	LuryObject *obj = klass->create_instance();
 	obj->setClass(klass);
 	return ASTExit(obj, NomalExit);
 }
@@ -257,4 +257,28 @@ ASTExit NotAST::eval(LuryContext *context) {
 	ASTExit expr_exit = expr->eval(context);
 	bool boolean = expr_exit.getReturnValue()->isTrue();
 	return ASTExit(new LuryBoolean(!boolean), NomalExit);
+}
+
+#include <dlfcn.h>
+
+ASTExit ImportAST::eval(LuryContext *context) {
+	void (*init_func)(void);
+	string name = ident->getValue();
+	string lib_path = "./ext/" + name + ".so";
+	string func_name = "Init_" + name;
+	void *handle = dlopen(lib_path.c_str(), RTLD_NOW);
+
+	if (handle == 0) {
+		throw dlerror();
+	}
+
+	dlerror();
+	init_func = (void (*)(void))dlsym(handle, func_name.c_str());
+	char *error;
+	if ((error = dlerror()) != NULL)  {
+		std::cerr << error << std::endl;
+		exit(1);
+	}
+	(*init_func)();
+	return ASTExit(new LuryBoolean(true), NomalExit);
 }
