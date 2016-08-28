@@ -150,7 +150,7 @@ ASTExit ClassStatementAST::eval(LuryContext *context) {
 
 ASTExit CreateInstanceAST::eval(LuryContext *context) {
 	LuryClass *klass = (LuryClass *)context->get(name);
-	LuryObject *obj = klass->create_instance();
+	LuryObject *obj = (klass->create_instance)();
 	obj->setClass(klass);
 	return ASTExit(obj, NomalExit);
 }
@@ -262,7 +262,7 @@ ASTExit NotAST::eval(LuryContext *context) {
 #include <dlfcn.h>
 
 ASTExit ImportAST::eval(LuryContext *context) {
-	void (*init_func)(void);
+	void (*init_func)(LuryContext *);
 	string name = ident->getValue();
 	string lib_path = "./ext/" + name + ".so";
 	string func_name = "Init_" + name;
@@ -273,12 +273,12 @@ ASTExit ImportAST::eval(LuryContext *context) {
 	}
 
 	dlerror();
-	init_func = (void (*)(void))dlsym(handle, func_name.c_str());
+	init_func = (void (*)(LuryContext *))dlsym(handle, func_name.c_str());
 	char *error;
 	if ((error = dlerror()) != NULL)  {
 		std::cerr << error << std::endl;
 		exit(1);
 	}
-	(*init_func)();
+	(init_func)(context);
 	return ASTExit(new LuryBoolean(true), NomalExit);
 }

@@ -1,4 +1,5 @@
 #include "../include/class.hpp"
+#include "../include/context.hpp"
 
 #include <iostream>
 
@@ -15,10 +16,11 @@ LuryObject *create() {
 	return new ExtTest();
 }
 
-void Init_test() {
+extern "C" void Init_test(LuryContext *context) {
 	LuryClass::createClass("Test");
 	LuryClass *klass = LuryClass::getClass("Test");
 	klass->create_instance = create;
+	context->set("Test", klass);
 }
 
-//g++ -shared -std=c++11 test.cpp -o test.so
+//g++ -shared -std=c++11 test.cpp ../src/context.cpp ../src/class.cpp ../src/boolean.cpp -o test.so
