@@ -4,7 +4,12 @@
 
 #include "object.hpp"
 
+using namespace std;
+
+typedef function<LuryObject *(LuryObject *, list<LuryObject *>)> nfunction;
+
 class AST;
+class LuryContext;
 
 enum FunctionType {
 	Instruction,
@@ -14,20 +19,21 @@ enum FunctionType {
 class LuryFunction : public LuryObject {
 private:
 	FunctionType func_type;
-	std::list<string> params;
+	list<string> params;
 	AST *proc;
-	function<void(LuryObject *)> nfunc;
-public:
-	LuryFunction(std::list<string> params, AST *proc);
-	LuryFunction (function<void(LuryObject *)> nfunc);
-	static void init();
-	static inline bool classof(LuryFunction const*) { return true; }
-	static inline bool classof(LuryObject const *object) {
-		return object->getClassName() == "Function";
-	}
-	std::list<string> getParams() { return params; }
-	AST *getProc() { return proc; }
-	FunctionType getFunctionType() { return func_type; }
+	nfunction nfunc;
 
-	void eval(LuryObject *obj) { return nfunc(obj); }
+public:
+	LuryFunction(list<string> params, AST *proc);
+	LuryFunction(nfunction nfunc);
+	~LuryFunction();
+	static inline bool classof(LuryFunction const*) { return true; }
+	static bool classof(LuryObject *object);
+
+	ASTExit eval(LuryContext context, list<LuryObject *> args);
+	inline list<string> getParams() { return params; }
+	inline AST *getProc() { return proc; }
+	inline FunctionType getFunctionType() { return func_type; }
+
+	static void init();
 };

@@ -1,25 +1,29 @@
 #pragma once
 
 #include <map>
+#include <list>
 #include <string>
 
 using namespace std;
+
+class ASTExit;
 
 class LuryObject {
 private:
 	map<string, LuryObject *> fields;
 	LuryObject *klass;
+
 public:
-	LuryObject() {}
-	~LuryObject() {}
-	LuryObject *get(string field_name) { return fields[field_name]; }
-	LuryObject *call(string name);
-	void setClass(LuryObject *klass) { this->klass = klass; }
-	string getClassName() const;
+	LuryObject(LuryObject *klass);
+	~LuryObject();
+
+	inline LuryObject *getField(string field_name) { return fields[field_name]; }
+	inline LuryObject *getClass() { return klass; }
+	inline void setClass(LuryObject* k) { klass = k; }
+	ASTExit call(string name, list<LuryObject *> atgs);
 
 	virtual bool isTrue() { return false; }
 	virtual string to_s() { return "Object"; }
-
 	virtual LuryObject *add(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject *sub(LuryObject *obj) { throw "sub not impliment in object"; }
 	virtual LuryObject *mul(LuryObject *obj) { throw "mul not impliment in object"; }

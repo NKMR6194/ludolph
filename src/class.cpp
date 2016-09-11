@@ -1,13 +1,36 @@
 #include "../include/class.hpp"
 
 map<string, LuryClass *> LuryClass::class_objects;
+LuryClass *CLASS_OBJ_OBJECT;
+LuryClass *CLASS_OBJ_CLASS;
+LuryClass *CLASS_OBJ_FUNCTION;
 
-void LuryClass::createClass(string name, string parent) {
+LuryClass::LuryClass(string name) : LuryObject(CLASS_OBJ_CLASS), name(name) {}
+
+LuryClass::~LuryClass() {}
+
+void LuryClass::setMethod(string name, LuryFunction *function) {
+	methods[name] = function;
+}
+
+LuryFunction *LuryClass::getMethod(string name) {
+	LuryFunction *method = methods[name];
+	if (method == NULL && parent != NULL) {
+		method = parent->getMethod(name);
+	}
+	return method;
+}
+
+LuryClass *LuryClass::createClass(string name, LuryClass *parent) {
 	LuryClass *new_class = new LuryClass(name);
-	new_class->setClass(class_objects["Class"]);
-	new_class->parent = class_objects[parent];
+	new_class->parent = parent;
 
 	class_objects[name] = new_class;
+	return new_class;
+}
+
+LuryClass *LuryClass::createClass(string name) {
+	return createClass(name, CLASS_OBJ_OBJECT);
 }
 
 void LuryClass::init() {
@@ -17,8 +40,14 @@ void LuryClass::init() {
 	object->setClass(klass);
 	object->parent = NULL;
 	class_objects["Object"] = object;
+	CLASS_OBJ_OBJECT = object;
 
 	klass->setClass(klass);
 	klass->parent = object;
-	class_objects["Class"] = object;
+	class_objects["Class"] = klass;
+	CLASS_OBJ_CLASS = klass;
+}
+
+LuryClass *LuryClass::getClass(string name) {
+	return class_objects[name];
 }

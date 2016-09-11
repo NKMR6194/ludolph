@@ -5,6 +5,14 @@
 #include "../include/complex.hpp"
 #include "../include/boolean.hpp"
 
+LuryClass *CLASS_OBJ_INT;
+
+LuryInteger::LuryInteger(int value) : LuryObject(CLASS_OBJ_INT), value(value) {}
+
+void LuryInteger::init() {
+	CLASS_OBJ_INT = LuryClass::createClass("Integer");
+}
+
 LuryObject* LuryInteger::add(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
@@ -86,14 +94,14 @@ LuryObject* LuryInteger::mod(LuryObject *obj) {
 LuryObject* LuryInteger::equal(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value == i->value);
+		return LuryBoolean::getInstance(value == i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean((double)value == i->getValue());
+		return LuryBoolean::getInstance((double)value == i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
-		return new LuryBoolean(false);
+		return LuryBoolean::getInstance(false);
 	}
 	throw "equal not impliment other object";
 }
@@ -101,14 +109,14 @@ LuryObject* LuryInteger::equal(LuryObject *obj) {
 LuryObject* LuryInteger::notEqual(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value != i->value);
+		return LuryBoolean::getInstance(value != i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
 		return new LuryFloating((double)value != i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
-		return new LuryBoolean(true);
+		return LuryBoolean::getInstance(true);
 	}
 	throw "notEqual not impliment other object";
 }
@@ -116,11 +124,11 @@ LuryObject* LuryInteger::notEqual(LuryObject *obj) {
 LuryObject* LuryInteger::less(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value < i->value);
+		return LuryBoolean::getInstance(value < i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean((double)value < i->getValue());
+		return LuryBoolean::getInstance((double)value < i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Integer and Comprex";
@@ -131,11 +139,11 @@ LuryObject* LuryInteger::less(LuryObject *obj) {
 LuryObject* LuryInteger::lessOrEqual(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value <= i->value);
+		return LuryBoolean::getInstance(value <= i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean((double)value <= i->getValue());
+		return LuryBoolean::getInstance((double)value <= i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Integer and Comprex";
@@ -146,11 +154,11 @@ LuryObject* LuryInteger::lessOrEqual(LuryObject *obj) {
 LuryObject* LuryInteger::greater(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value > i->value);
+		return LuryBoolean::getInstance(value > i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean((double)value > i->getValue());
+		return LuryBoolean::getInstance((double)value > i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Integer and Comprex";
@@ -161,11 +169,11 @@ LuryObject* LuryInteger::greater(LuryObject *obj) {
 LuryObject* LuryInteger::greaterOrEqual(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value >= i->value);
+		return LuryBoolean::getInstance(value >= i->value);
 	}
 	else if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean((double)value >= i->getValue());
+		return LuryBoolean::getInstance((double)value >= i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Integer and Comprex";

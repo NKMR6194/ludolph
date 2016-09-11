@@ -2,6 +2,10 @@
 
 #include <unordered_map>
 
+#include "object.hpp"
+#include "class.hpp"
+#include "function.hpp"
+
 using namespace std;
 
 class LuryContext {
@@ -20,4 +24,5 @@ public:
 	void set(string key, LuryObject *value) { env[key] = value; }
 	void setMethod(string name, LuryFunction *func) { klass->setMethod(name, func); }
 	LuryFunction *getMethod(string name) { return klass->getMethod(name); }
+	LuryClass *getClass() { return klass; }
 };

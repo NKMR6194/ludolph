@@ -14,8 +14,9 @@ enum ASTExitReason {
 class ASTExit {
 	LuryObject *return_value;
 	ASTExitReason exit_reason;
+
 public:
-	ASTExit() : return_value(new LuryNil()), exit_reason(NomalExit) {}
+	ASTExit() {}
 	ASTExit(LuryObject *return_value, ASTExitReason exit_reason) : return_value(return_value), exit_reason(exit_reason) {}
 	~ASTExit() {}
 	ASTExitReason getExitReason() { return exit_reason; }

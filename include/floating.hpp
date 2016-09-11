@@ -3,22 +3,23 @@
 #include "object.hpp"
 #include "class.hpp"
 
+extern LuryClass *CLASS_OBJ_FLOAT;
+
 class LuryFloating : public LuryObject {
 private:
-	double value;
+	const double value;
 
 public:
-	LuryFloating(double value) : value(value) {
-		setClass(LuryClass::getClass("Floating"));
-	}
-	static void init() { LuryClass::createClass("Floating"); }
+	LuryFloating(double value);
+
+	static void init();
 	static inline bool classof(LuryFloating const*) { return true; }
-	static inline bool classof(LuryObject const *object) {
-		return object->getClassName() == "Floating";
+	static inline bool classof(LuryObject *object) {
+		return object->getClass() == CLASS_OBJ_FLOAT;
 	}
 
-	double getValue() { return value; }
-	string to_s() { return to_string(value); }
+	inline double getValue() { return value; }
+	inline string to_s() { return to_string(value); }
 	LuryObject *add(LuryObject *obj);
 	LuryObject *sub(LuryObject *obj);
 	LuryObject *mul(LuryObject *obj);

@@ -3,22 +3,27 @@
 #include "object.hpp"
 #include "class.hpp"
 
+extern LuryClass *CLASS_OBJ_COMPLEX;
+
 class LuryComplex : public LuryObject {
-	double real, imaginary;
+private:
+	const double real, imaginary;
+
 public:
-	LuryComplex(double real, double imaginary) : real(real), imaginary(imaginary){
-		setClass(LuryClass::getClass("Complex"));
-	}
-	static void init() { LuryClass::createClass("Complex"); }
+	LuryComplex(double real, double imaginary);
+
+	static void init();
 	static inline bool classof(LuryComplex const*) { return true; }
-	static inline bool classof(LuryObject const *object) {
-		return object->getClassName() == "Complex";
+	static inline bool classof(LuryObject *object) {
+		return object->getClass() == CLASS_OBJ_COMPLEX;
 	}
 
-	double getReal() { return real; }
-	double getImaginary() { return imaginary; }
-	LuryObject* conjugate() { return new LuryComplex(real, -imaginary); }
-	string to_s() { return "(" + to_string(real) + "+" + to_string(imaginary) + "i)"; }
+	inline double getReal() { return real; }
+	inline double getImaginary() { return imaginary; }
+	inline LuryObject* conjugate() { return new LuryComplex(real, -imaginary); }
+	inline string to_s() {
+		return "(" + to_string(real) + "+" + to_string(imaginary) + "i)";
+	}
 	LuryObject *add(LuryObject *obj);
 	LuryObject *sub(LuryObject *obj);
 	LuryObject *mul(LuryObject *obj);

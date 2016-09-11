@@ -3,19 +3,22 @@
 #include "object.hpp"
 #include "class.hpp"
 
+extern LuryClass *CLASS_OBJ_INT;
+
 class LuryInteger : public LuryObject {
-	int value;
+private:
+	const int value;
+
 public:
-	LuryInteger(int value) : value(value) {
-		setClass(LuryClass::getClass("Integer"));
-	}
-	static void init() { LuryClass::createClass("Integer"); }
+	LuryInteger(int value);
+
+	static void init();
 	static inline bool classof(LuryInteger const*) { return true; }
-	static inline bool classof(LuryObject const *object) {
-		return object->getClassName() == "Integer";
+	static inline bool classof(LuryObject *object) {
+		return object->getClass() == CLASS_OBJ_INT;
 	}
 
-	int getValue() { return value; }
+	inline int getValue() { return value; }
 	string to_s() { return to_string(value); }
 	LuryObject *add(LuryObject *obj);
 	LuryObject *sub(LuryObject *obj);

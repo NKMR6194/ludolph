@@ -3,6 +3,16 @@
 #include "../include/floating.hpp"
 #include "../include/boolean.hpp"
 
+LuryClass *CLASS_OBJ_COMPLEX;
+
+LuryComplex::LuryComplex(double real, double imaginary) :
+	LuryObject(CLASS_OBJ_COMPLEX), real(real), imaginary(imaginary)
+{}
+
+void LuryComplex::init() {
+	CLASS_OBJ_COMPLEX = LuryClass::createClass("Complex");
+}
+
 LuryObject* LuryComplex::add(LuryObject *obj) {
 	if (LuryComplex::classof(obj)) {
 		LuryComplex *i = (LuryComplex *)obj;
@@ -72,13 +82,13 @@ LuryObject* LuryComplex::div(LuryObject *obj) {
 LuryObject* LuryComplex::equal(LuryObject *obj) {
 	if (LuryComplex::classof(obj)) {
 		LuryComplex *i = (LuryComplex *)obj;
-		return new LuryBoolean(real == i->real && imaginary == i->imaginary);
+		return LuryBoolean::getInstance(real == i->real && imaginary == i->imaginary);
 	}
 	else if (LuryInteger::classof(obj)) {
-		return new LuryBoolean(false);
+		return LuryBoolean::getInstance(false);
 	}
 	else if (LuryFloating::classof(obj)) {
-		return new LuryBoolean(false);
+		return LuryBoolean::getInstance(false);
 	}
 	throw "not impliment equal operation Complex and Object";
 }
@@ -86,13 +96,13 @@ LuryObject* LuryComplex::equal(LuryObject *obj) {
 LuryObject* LuryComplex::notEqual(LuryObject *obj) {
 	if (LuryComplex::classof(obj)) {
 		LuryComplex *i = (LuryComplex *)obj;
-		return new LuryBoolean(real != i->real || imaginary != i->imaginary);
+		return LuryBoolean::getInstance(real != i->real || imaginary != i->imaginary);
 	}
 	else if (LuryInteger::classof(obj)) {
-		return new LuryBoolean(true);
+		return LuryBoolean::getInstance(true);
 	}
 	else if (LuryFloating::classof(obj)) {
-		return new LuryBoolean(true);
+		return LuryBoolean::getInstance(true);
 	}
 	throw "not impliment not equal operation Complex and Object";
 }

@@ -1,12 +1,18 @@
 #pragma once
 
 #include "object.hpp"
+#include "class.hpp"
+
+using namespace std;
+
+extern LuryClass *CLASS_OBJ_STRING;
 
 class LuryString : public LuryObject {
-	std::string value;
+private:
+	const string value;
+
 public:
-	LuryString(std::string value) : value(value) {
-		setClass(LuryClass::getClass("String"));
-	}
-	static void init() { LuryClass::createClass("String"); }
+	LuryString(string value);
+
+	static void init();
 };

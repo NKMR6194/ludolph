@@ -3,6 +3,11 @@
 
 using namespace std;
 
+LuryObject *lury_puts(LuryObject *obj, list<LuryObject *> args) {
+	cout << args.front()->to_s() << endl;
+	return LuryNil::getInstance();
+}
+
 int main (int argc, char* argv[]) {
 	lury::Driver drive;
 	string file_path;
@@ -18,7 +23,7 @@ int main (int argc, char* argv[]) {
 	if (drive.parse_file(file_path)) {
 		LuryClass mother("main");
 		LuryContext *context = new LuryContext(&mother);
-		context->setMethod("puts", new LuryFunction([](LuryObject *obj){ cout << obj->to_s() << endl; }));
+		context->setMethod("puts", new LuryFunction(lury_puts));
 		drive.ast->eval(context);
 	}
 

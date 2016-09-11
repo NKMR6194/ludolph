@@ -105,7 +105,7 @@ ASTExit IfStatementAST::eval(LuryContext *context) {
 	}
 	else {
 		if (else_stmt == NULL) {
-			ASTExit ast_exit(new LuryNil(), NomalExit);
+			ASTExit ast_exit(LuryNil::getInstance(), NomalExit);
 			return ast_exit;
 		}
 		else {
@@ -137,7 +137,7 @@ ASTExit IdentifierAST::eval(LuryContext *context) {
 
 ASTExit FunctionStatementAST::eval(LuryContext *context) {
 	context->setMethod(name, new LuryFunction(params, proc));
-	ASTExit ast_exit(new LuryBoolean(true), NomalExit);
+	ASTExit ast_exit(LuryBoolean::getInstance(true), NomalExit);
 	return ast_exit;
 }
 
@@ -145,13 +145,12 @@ ASTExit ClassStatementAST::eval(LuryContext *context) {
 	LuryClass *klass = new LuryClass(name);
 	context->set(name, klass);
 	suit->eval(context->copy(klass));
-	return ASTExit(new LuryNil(), NomalExit);
+	return ASTExit(LuryNil::getInstance(), NomalExit);
 }
 
 ASTExit CreateInstanceAST::eval(LuryContext *context) {
 	LuryClass *klass = (LuryClass *)context->get(name);
-	LuryObject *obj = new LuryObject;
-	obj->setClass(klass);
+	LuryObject *obj = new LuryObject(klass);
 	return ASTExit(obj, NomalExit);
 }
 
@@ -163,27 +162,14 @@ ASTExit CallAST::eval(LuryContext *context) {
 	}
 	if (LuryFunction::classof(obj)) {
 		LuryFunction *func = (LuryFunction *) obj;
-		LuryContext *func_context = context->copy();
-		AST *native_arg = args.front();
-		switch (func->getFunctionType()) {
-		case NativeFunc:
-			func->eval(native_arg->eval(func_context).getReturnValue());
-			return ASTExit(new LuryNil(), NomalExit);
-		case Instruction:
-			AST *proc = func->getProc();
-			list<string> params = func->getParams();
+		LuryContext func_context(context->getClass());
+		list<LuryObject *> fargs;
 
-			auto params_itr = params.begin();
-			auto args_itr = args.begin();
-			while (args_itr != args.end()) {
-				ASTExit arg_exit = (*args_itr)->eval(context);
-				func_context->set(*params_itr, arg_exit.getReturnValue());
-				params_itr++;
-				args_itr++;
-			}
-
-			return proc->eval(func_context);
+		for (auto itr : args) {
+			ASTExit e = itr->eval(context);
+			fargs.push_back(e.getReturnValue());
 		}
+		return func->eval(func_context, fargs);
 	}
 	else if (LuryLambda::classof(obj)) {
 		LuryLambda *func = (LuryLambda *) obj;
@@ -214,15 +200,15 @@ ASTExit ReturnStatementAST::eval(LuryContext *context) {
 }
 
 ASTExit ContinueStatementAST::eval(LuryContext *context) {
-	return ASTExit(new LuryNil(), Continue);
+	return ASTExit(LuryNil::getInstance(), Continue);
 }
 
 ASTExit BreakStatementAST::eval(LuryContext *context) {
-	return ASTExit(new LuryNil(), Break);
+	return ASTExit(LuryNil::getInstance(), Break);
 }
 
 ASTExit WhileStatementAST::eval(LuryContext *context) {
-	ASTExit ast_exit(new LuryNil(), NomalExit);
+	ASTExit ast_exit(LuryNil::getInstance(), NomalExit);
 	while (true) {
 		ASTExit condition_exit = condition->eval(context);
 		if (condition_exit.getReturnValue() == NULL) {
@@ -243,7 +229,7 @@ ASTExit WhileStatementAST::eval(LuryContext *context) {
 			// ignore
 		}
 		else if (ast_exit.getExitReason() == Break) {
-			ast_exit = ASTExit(new LuryNil(), NomalExit);
+			ast_exit = ASTExit(LuryNil::getInstance(), NomalExit);
 			break;
 		}
 		else if (ast_exit.getExitReason() != NomalExit) {
@@ -256,5 +242,5 @@ ASTExit WhileStatementAST::eval(LuryContext *context) {
 ASTExit NotAST::eval(LuryContext *context) {
 	ASTExit expr_exit = expr->eval(context);
 	bool boolean = expr_exit.getReturnValue()->isTrue();
-	return ASTExit(new LuryBoolean(!boolean), NomalExit);
+	return ASTExit(LuryBoolean::getInstance(!boolean), NomalExit);
 }

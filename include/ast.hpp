@@ -150,7 +150,7 @@ class NilLitAST : public AST {
 public:
 	NilLitAST() : AST(NilLitID) {}
 	~NilLitAST() {}
-	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)new LuryNil(), NomalExit); }
+	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)LuryNil::getInstance(), NomalExit); }
 };
 
 class BooleanLitAST : public AST {
@@ -158,7 +158,7 @@ class BooleanLitAST : public AST {
 public:
 	BooleanLitAST(bool value) : AST (BooleanLitID), value(value) {}
 	~BooleanLitAST() {}
-	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)new LuryBoolean(value), NomalExit); }
+	ASTExit eval(LuryContext *context) { return ASTExit((LuryObject *)LuryBoolean::getInstance(value), NomalExit); }
 };
 
 class LambdaLitAST : public AST {

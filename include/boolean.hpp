@@ -3,20 +3,29 @@
 #include "object.hpp"
 #include "class.hpp"
 
+extern LuryClass *CLASS_OBJ_BOOL;
+
 class LuryBoolean : public LuryObject {
-	bool value;
+private:
+	const bool value;
+	static LuryBoolean *obj_true;
+	static LuryBoolean *obj_false;
+
+	LuryBoolean(bool value);
+
 public:
-	LuryBoolean(bool value) : value(value) {
-		setClass(LuryClass::getClass("Boolean"));
-	}
-	static void init() { LuryClass::createClass("Boolean"); }
+	static void init();
 	static inline bool classof(LuryBoolean const*) { return true; }
-	static inline bool classof(LuryObject const *object) {
-		return object->getClassName() == "Boolean";
+	static inline bool classof(LuryObject *object) {
+		return object->getClass() == CLASS_OBJ_BOOL;
 	}
-	bool isTrue() { return value; }
-	bool isFalse() { return !value; }
-	string to_s() { return value ? "true" : "false"; }
+	static inline LuryBoolean *getInstance(bool value) {
+		return value ? obj_true : obj_false;
+	}
+
+	inline bool isTrue() { return value; }
+	inline bool isFalse() { return !value; }
+	inline string to_s() { return value ? "true" : "false"; }
 	LuryObject *equal(LuryObject *obj);
 	LuryObject *notEqual(LuryObject *obj);
 };

@@ -5,6 +5,16 @@
 #include "../include/complex.hpp"
 #include "../include/boolean.hpp"
 
+LuryClass *CLASS_OBJ_FLOAT;
+
+LuryFloating::LuryFloating(double value) :
+	LuryObject(CLASS_OBJ_FLOAT), value(value)
+{}
+
+void LuryFloating::init() {
+	CLASS_OBJ_FLOAT = LuryClass::createClass("Floating");
+}
+
 LuryObject* LuryFloating::add(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
@@ -80,14 +90,14 @@ LuryObject* LuryFloating::mod(LuryObject *obj) {
 LuryObject* LuryFloating::equal(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value == i->value);
+		return LuryBoolean::getInstance(value == i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value == i->getValue());
+		return LuryBoolean::getInstance(value == i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
-		return new LuryBoolean(false);
+		return LuryBoolean::getInstance(false);
 	}
 	throw "equal not impliment other object";
 }
@@ -95,14 +105,14 @@ LuryObject* LuryFloating::equal(LuryObject *obj) {
 LuryObject* LuryFloating::notEqual(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value != i->value);
+		return LuryBoolean::getInstance(value != i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value != i->getValue());
+		return LuryBoolean::getInstance(value != i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
-		return new LuryBoolean(true);
+		return LuryBoolean::getInstance(true);
 	}
 	throw "notEqual not impliment other object";
 }
@@ -110,11 +120,11 @@ LuryObject* LuryFloating::notEqual(LuryObject *obj) {
 LuryObject* LuryFloating::less(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value < i->value);
+		return LuryBoolean::getInstance(value < i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value < i->getValue());
+		return LuryBoolean::getInstance(value < i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Floating and Comprex";
@@ -125,11 +135,11 @@ LuryObject* LuryFloating::less(LuryObject *obj) {
 LuryObject* LuryFloating::lessOrEqual(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value <= i->value);
+		return LuryBoolean::getInstance(value <= i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value <= i->getValue());
+		return LuryBoolean::getInstance(value <= i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Floating and Comprex";
@@ -140,11 +150,11 @@ LuryObject* LuryFloating::lessOrEqual(LuryObject *obj) {
 LuryObject* LuryFloating::greater(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value > i->value);
+		return LuryBoolean::getInstance(value > i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value > i-> getValue());
+		return LuryBoolean::getInstance(value > i-> getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Floating and Comprex";
@@ -155,11 +165,11 @@ LuryObject* LuryFloating::greater(LuryObject *obj) {
 LuryObject* LuryFloating::greaterOrEqual(LuryObject *obj) {
 	if (LuryFloating::classof(obj)) {
 		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryBoolean(value >= i->value);
+		return LuryBoolean::getInstance(value >= i->value);
 	}
 	else if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
-		return new LuryBoolean(value >= i->getValue());
+		return LuryBoolean::getInstance(value >= i->getValue());
 	}
 	else if (LuryComplex::classof(obj)) {
 		throw "can not compare Floating and Comprex";

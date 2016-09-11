@@ -4,9 +4,14 @@
 #include "class.hpp"
 
 class LuryNil : public LuryObject {
+private:
+	LuryNil();
+
+	static LuryNil *nil;
+
 public:
-	LuryNil() {
-		setClass(LuryClass::getClass("Nil"));
-	}
-	static void init() { LuryClass::createClass("Nil"); }
+	static void init();
+	inline static LuryNil *getInstance() { return nil; }
 };
+
+extern LuryClass *CLASS_OBJ_NIL;
