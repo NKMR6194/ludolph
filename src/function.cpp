@@ -38,7 +38,7 @@ ASTExit LuryFunction::eval(LuryContext context, list<LuryObject *> args) {
 		}
 		return proc->eval(&context);
 	case NativeFunc:
-		LuryObject *ret = nfunc(context.getClass(), args);
+		LuryObject *ret = nfunc(context.getObject(), args);
 		return ASTExit(ret, NomalExit);
 	}
 }

@@ -141,15 +141,16 @@ ASTExit FunctionStatementAST::eval(LuryContext *context) {
 	return ast_exit;
 }
 
-ASTExit ClassStatementAST::eval(LuryContext *context) {
-	LuryClass *klass = new LuryClass(name);
-	context->set(name, klass);
-	suit->eval(context->copy(klass));
+ASTExit ClassStatementAST::eval(LuryContext *) {
+	LuryClass *klass = LuryClass::createClass(name);
+	LuryContext context(klass);
+
+	suit->eval(&context);
 	return ASTExit(LuryNil::getInstance(), NomalExit);
 }
 
 ASTExit CreateInstanceAST::eval(LuryContext *context) {
-	LuryClass *klass = (LuryClass *)context->get(name);
+	LuryClass *klass = LuryClass::getClass(name);
 	LuryObject *obj = new LuryObject(klass);
 	return ASTExit(obj, NomalExit);
 }
@@ -162,7 +163,7 @@ ASTExit CallAST::eval(LuryContext *context) {
 	}
 	if (LuryFunction::classof(obj)) {
 		LuryFunction *func = (LuryFunction *) obj;
-		LuryContext func_context(context->getClass());
+		LuryContext func_context(context->getObject());
 		list<LuryObject *> fargs;
 
 		for (auto itr : args) {
@@ -171,24 +172,24 @@ ASTExit CallAST::eval(LuryContext *context) {
 		}
 		return func->eval(func_context, fargs);
 	}
-	else if (LuryLambda::classof(obj)) {
-		LuryLambda *func = (LuryLambda *) obj;
-		LuryContext *func_context = context->copy();
+	// else if (LuryLambda::classof(obj)) {
+	// 	LuryLambda *func = (LuryLambda *) obj;
+	// 	LuryContext *func_context = context->copy();
 
-		AST *proc = func->getProc();
-		list<string> params = func->getParams();
+	// 	AST *proc = func->getProc();
+	// 	list<string> params = func->getParams();
 
-		auto params_itr = params.begin();
-		auto args_itr = args.begin();
-		while (args_itr != args.end()) {
-			ASTExit arg_exit = (*args_itr)->eval(context);
-			func_context->set(*params_itr, arg_exit.getReturnValue());
-			params_itr++;
-			args_itr++;
-		}
+	// 	auto params_itr = params.begin();
+	// 	auto args_itr = args.begin();
+	// 	while (args_itr != args.end()) {
+	// 		ASTExit arg_exit = (*args_itr)->eval(context);
+	// 		func_context->set(*params_itr, arg_exit.getReturnValue());
+	// 		params_itr++;
+	// 		args_itr++;
+	// 	}
 
-		return proc->eval(func_context);
-	}
+	// 	return proc->eval(func_context);
+	// }
 
 	throw "this object is not function";
 }

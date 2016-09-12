@@ -7,18 +7,16 @@ using namespace std;
 
 class LuryClass : public LuryObject {
 private:
+	LuryClass(string name);
+
 	const string name;
-	map<string, LuryFunction *> methods;
 	LuryClass *parent;
 
 	static map<string, LuryClass *> class_objects;
 
 public:
-	LuryClass(string name);
-	~LuryClass();
 
-	void setMethod(string name, LuryFunction *function);
-	LuryFunction *getMethod(string name);
+	LuryObject *getMethod(string name);
 	inline const string getName() { return name; }
 
 	static void init();

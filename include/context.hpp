@@ -3,26 +3,22 @@
 #include <unordered_map>
 
 #include "object.hpp"
-#include "class.hpp"
 #include "function.hpp"
 
 using namespace std;
 
 class LuryContext {
+private:
 	unordered_map<string, LuryObject *> env;
-	LuryClass *klass;
+	LuryObject *object;
 
 public:
-	LuryContext() {}
-	LuryContext(unordered_map<string, LuryObject *> env) : env(env) {}
-	LuryContext(LuryClass *klass) : klass(klass) {}
-	LuryContext(unordered_map<string, LuryObject *> env, LuryClass *klass)
-		: env(env), klass(klass) {}
-	LuryObject* get(string key) { return env[key]; }
-	LuryContext* copy() { return new LuryContext(env, klass); }
-	LuryContext* copy(LuryClass *klass) { return new LuryContext(env, klass); }
-	void set(string key, LuryObject *value) { env[key] = value; }
-	void setMethod(string name, LuryFunction *func) { klass->setMethod(name, func); }
-	LuryFunction *getMethod(string name) { return klass->getMethod(name); }
-	LuryClass *getClass() { return klass; }
+	LuryContext(LuryObject *object);
+
+	inline LuryObject* get(string key) { return env[key]; }
+	inline void set(string key, LuryObject *value) { env[key] = value; }
+
+	inline void setMethod(string name, LuryFunction *func) { object->setMethod(name, func); }
+	inline LuryFunction *getMethod(string name) { return (LuryFunction *)(object->getMethod(name)); }
+	inline LuryObject *getObject() { return object; }
 };

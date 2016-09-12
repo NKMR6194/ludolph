@@ -21,7 +21,7 @@ int main (int argc, char* argv[]) {
 
 	file_path = string(argv[1]);
 	if (drive.parse_file(file_path)) {
-		LuryClass mother("main");
+		LuryObject mother(CLASS_OBJ_OBJECT);
 		LuryContext *context = new LuryContext(&mother);
 		context->setMethod("puts", new LuryFunction(lury_puts));
 		drive.ast->eval(context);

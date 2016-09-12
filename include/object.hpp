@@ -9,21 +9,26 @@ using namespace std;
 class ASTExit;
 
 class LuryObject {
-private:
+protected:
 	map<string, LuryObject *> fields;
+	map<string, LuryObject *> methods;
 	LuryObject *klass;
 
 public:
 	LuryObject(LuryObject *klass);
 	~LuryObject();
 
-	inline LuryObject *getField(string field_name) { return fields[field_name]; }
-	inline LuryObject *getClass() { return klass; }
-	inline void setClass(LuryObject* k) { klass = k; }
+	LuryObject *getField(string name);
+	void setField(string name, LuryObject *field);
+	LuryObject *getMethod(string name);
+	void setMethod(string name, LuryObject *method);
+	LuryObject *getClass();
+	void setClass(LuryObject* k);
+
 	ASTExit call(string name, list<LuryObject *> atgs);
 
 	virtual bool isTrue() { return false; }
-	virtual string to_s() { return "Object"; }
+	virtual string to_s();
 	virtual LuryObject *add(LuryObject *obj) { throw "add not impliment in object"; }
 	virtual LuryObject *sub(LuryObject *obj) { throw "sub not impliment in object"; }
 	virtual LuryObject *mul(LuryObject *obj) { throw "mul not impliment in object"; }

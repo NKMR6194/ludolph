@@ -7,14 +7,8 @@ LuryClass *CLASS_OBJ_FUNCTION;
 
 LuryClass::LuryClass(string name) : LuryObject(CLASS_OBJ_CLASS), name(name) {}
 
-LuryClass::~LuryClass() {}
-
-void LuryClass::setMethod(string name, LuryFunction *function) {
-	methods[name] = function;
-}
-
-LuryFunction *LuryClass::getMethod(string name) {
-	LuryFunction *method = methods[name];
+LuryObject *LuryClass::getMethod(string name) {
+	LuryObject *method = methods[name];
 	if (method == NULL && parent != NULL) {
 		method = parent->getMethod(name);
 	}
