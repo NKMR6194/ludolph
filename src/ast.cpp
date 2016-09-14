@@ -105,8 +105,7 @@ ASTExit IfStatementAST::eval(LuryContext *context) {
 	}
 	else {
 		if (else_stmt == NULL) {
-			ASTExit ast_exit(LuryNil::getInstance(), NomalExit);
-			return ast_exit;
+			return ASTExit(LuryNil::getInstance(), NomalExit);
 		}
 		else {
 			return else_stmt->eval(context);
@@ -115,8 +114,8 @@ ASTExit IfStatementAST::eval(LuryContext *context) {
 }
 
 ASTExit CompoundAST::eval(LuryContext *context) {
-	LuryObject *obj;
 	ASTExit stmt_exit;
+
 	for (auto stmt : list) {
 		stmt_exit = stmt->eval(context);
 		if (stmt_exit.getExitReason() != NomalExit) {
@@ -128,17 +127,16 @@ ASTExit CompoundAST::eval(LuryContext *context) {
 
 ASTExit IdentifierAST::eval(LuryContext *context) {
 	LuryObject *obj = context->get(value);
+
 	if (obj == NULL) {
 		obj = (LuryObject *)context->getMethod(value);
 	}
-	ASTExit ast_exit(obj, NomalExit);
-	return ast_exit;
+	return ASTExit(obj, NomalExit);
 }
 
 ASTExit FunctionStatementAST::eval(LuryContext *context) {
 	context->setMethod(name, new LuryFunction(params, proc));
-	ASTExit ast_exit(LuryBoolean::getInstance(true), NomalExit);
-	return ast_exit;
+	return ASTExit(LuryBoolean::getInstance(true), NomalExit);
 }
 
 ASTExit ClassStatementAST::eval(LuryContext *) {
@@ -158,6 +156,7 @@ ASTExit CreateInstanceAST::eval(LuryContext *context) {
 ASTExit CallAST::eval(LuryContext *context) {
 	ASTExit callee_exit = callee->eval(context);
 	LuryObject *obj = callee_exit.getReturnValue();
+
 	if (obj == NULL) {
 		throw "NULL";
 	}
