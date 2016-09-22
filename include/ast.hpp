@@ -2,12 +2,12 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include "object.hpp"
+#include "function.hpp"
 #include "nil.hpp"
 #include "integer.hpp"
 #include "string.hpp"
-#include "floating.hpp"
-#include "complex.hpp"
 #include "boolean.hpp"
 #include "lambda.hpp"
 #include "context.hpp"
@@ -63,6 +63,12 @@ public:
 	AstID getValueID() const { return ID; }
 	virtual void print() {}
 	virtual ASTExit eval(LuryContext *context) { throw "not implement eval"; };
+};
+
+class EmptyAST : public AST {
+public:
+	EmptyAST() : AST(EmptyID) {}
+	~EmptyAST() {}
 };
 
 class BinaryOpAST : public AST {
@@ -124,28 +130,6 @@ public:
 	}
 };
 
-class FloatNumberLitAST : public AST {
-	double value;
-public:
-	FloatNumberLitAST(double value) : AST(FloatNumberLitID), value(value){}
-	~FloatNumberLitAST() {}
-	int getFloatNumberValue() {return value;}
-	void print() { cout << "(FloatNumberLitAST " << value << ")"; }
-	ASTExit eval(LuryContext *context) {
-		return ASTExit(new LuryFloating(value), NomalExit);
-	}
-};
-
-class ImaginaryNumberLitAST : public AST {
-	double imaginary;
-public:
-	ImaginaryNumberLitAST(double imaginary) : AST(ImaginaryNumberLitID), imaginary(imaginary) {}
-	~ImaginaryNumberLitAST() {}
-	ASTExit eval(LuryContext *context) {
-		return ASTExit(new LuryComplex(0.0, imaginary), NomalExit);
-	}
-};
-
 class NilLitAST : public AST {
 public:
 	NilLitAST() : AST(NilLitID) {}
@@ -162,10 +146,10 @@ public:
 };
 
 class LambdaLitAST : public AST {
-	list<string> params;
+	vector<string> params;
 	AST *expr;
 public:
-	LambdaLitAST(list<string> params, AST *expr) : AST (LambdaLitID), params(params), expr(expr) {}
+	LambdaLitAST(vector<string> params, AST *expr) : AST (LambdaLitID), params(params), expr(expr) {}
 	~LambdaLitAST() {}
 	ASTExit eval(LuryContext *context) {
 		return ASTExit((LuryObject *)new LuryLambda(params, expr), NomalExit);
@@ -208,19 +192,60 @@ public:
 };
 
 class CompoundAST : public AST {
+private:
 	list<AST *> list;
+	void mergeBackAST(CompoundAST *ast) {
+		for (auto stmt : ast->list) {
+			this->push_back(stmt);
+		}
+		ast->list.clear();
+		delete ast;
+	}
+	void mergeFrontAST(CompoundAST *ast) {
+		auto itr = ast->list.rbegin();
+		while (itr != ast->list.rend()) {
+			this->push_front(*itr);
+			itr++;
+		}
+		ast->list.clear();
+		delete ast;
+	}
 public:
 	CompoundAST() : AST(CompoundID) {}
 	CompoundAST(AST *ast) : AST(CompoundID) {
 		this->push_back(ast);
+	}
+	CompoundAST(AST *ast1, AST *ast2) : AST(CompoundID) {
+		this->push_back(ast1);
+		this->push_back(ast2);
 	}
 	~CompoundAST() {
 		for (auto elem : list) {
 			delete elem;
 		}
 	}
-	void push_back(AST *ast) { list.push_back(ast); }
-	void push_front(AST *ast) { list.push_front(ast); }
+	void push_back(AST *ast) {
+		switch (ast->getValueID()) {
+		case CompoundID:
+			mergeBackAST((CompoundAST *) ast);
+			break;
+		case EmptyID:
+			break;
+		default:
+			list.push_back(ast);
+		}
+	}
+	void push_front(AST *ast) {
+		switch (ast->getValueID()) {
+		case CompoundID:
+			mergeFrontAST((CompoundAST *) ast);
+			break;
+		case EmptyID:
+			break;
+		default:
+			list.push_front(ast);
+		}
+	}
 	void print() { cout << "(CompoundAST)"; }
 	ASTExit eval(LuryContext *context);
 };
@@ -235,11 +260,11 @@ public:
 
 class FunctionStatementAST : public AST {
 	string name;
-	list<string> params;
+	vector<string> params;
 	AST *proc;
 public:
-	FunctionStatementAST(string name, list<string> params, AST *proc) : AST(FunctionID), name(name), params(params), proc(proc) {}
-	FunctionStatementAST(string name, list<string> *params, AST *proc) : AST(FunctionID), name(name), params(*params), proc(proc) {}
+	FunctionStatementAST(string name, AST *proc) : AST(FunctionID), name(name), proc(proc) {}
+	FunctionStatementAST(string name, vector<string> params, AST *proc) : AST(FunctionID), name(name), params(params), proc(proc) {}
 	ASTExit eval(LuryContext *context);
 };
 
@@ -260,9 +285,9 @@ public:
 
 class CallAST : public AST {
 	AST *callee;
-	list<AST *>args;
+	vector<AST *>args;
 public:
-	CallAST(AST *callee, list<AST *> args) : AST(CallID), callee(callee), args(args) {}
+	CallAST(AST *callee, vector<AST *> args) : AST(CallID), callee(callee), args(args) {}
 	ASTExit eval(LuryContext *context);
 };
 

@@ -2,13 +2,13 @@
 
 void luryInit() {
 	LuryClass::init();
-	LuryFunction::init();
+	LuryMethod::init();
 
 	LuryBoolean::init();
-	LuryComplex::init();
-	LuryFloating::init();
+	// LuryComplex::init();
+	// LuryFloating::init();
 	LuryInteger::init();
-	LuryLambda::init();
+	// LuryLambda::init();
 	LuryNil::init();
 	LuryString::init();
 }

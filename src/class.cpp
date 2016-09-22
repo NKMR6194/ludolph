@@ -1,18 +1,25 @@
-#include "../include/class.hpp"
+#include "include/class.hpp"
 
 map<string, LuryClass *> LuryClass::class_objects;
 LuryClass *CLASS_OBJ_OBJECT;
 LuryClass *CLASS_OBJ_CLASS;
-LuryClass *CLASS_OBJ_FUNCTION;
 
 LuryClass::LuryClass(string name) : LuryObject(CLASS_OBJ_CLASS), name(name) {}
 
-LuryObject *LuryClass::getMethod(string name) {
-	LuryObject *method = methods[name];
+LuryMethod *LuryClass::getMethod(string name) {
+	LuryMethod *method = methods[name];
 	if (method == NULL && parent != NULL) {
 		method = parent->getMethod(name);
 	}
 	return method;
+}
+
+void LuryClass::setMethod(string name, LuryMethod *method) {
+	methods[name] = method;
+}
+
+void LuryClass::setClassMethod(string name, LuryMethod *method) {
+	((LuryObject *)this)->setMethod(name, method);
 }
 
 LuryClass *LuryClass::createClass(string name, LuryClass *parent) {

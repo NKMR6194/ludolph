@@ -18,7 +18,7 @@ public:
 	inline LuryObject* get(string key) { return env[key]; }
 	inline void set(string key, LuryObject *value) { env[key] = value; }
 
-	inline void setMethod(string name, LuryFunction *func) { object->setMethod(name, func); }
-	inline LuryFunction *getMethod(string name) { return (LuryFunction *)(object->getMethod(name)); }
+	inline void setMethod(string name, LuryMethod *func) { object->setMethod(name, func); }
+	inline LuryMethod *getMethod(string name) { return (LuryMethod *)(object->getMethod(name)); }
 	inline LuryObject *getObject() { return object; }
 };

@@ -1,10 +1,11 @@
-#include "../include/object.hpp"
-#include "../include/class.hpp"
-#include "../include/boolean.hpp"
-#include "../include/context.hpp"
-#include "../include/ast_exit.hpp"
+#include "include/object.hpp"
+#include "include/class.hpp"
+#include "include/function.hpp"
+#include "include/boolean.hpp"
+#include "include/string.hpp"
+#include "include/ast_exit.hpp"
 
-LuryObject::LuryObject(LuryObject *klass) : klass(klass) {}
+LuryObject::LuryObject(LuryClass *klass) : klass(klass) {}
 
 LuryObject::~LuryObject() {}
 
@@ -16,38 +17,44 @@ void LuryObject::setField(string name, LuryObject *field) {
 	fields[name] = field;
 }
 
-LuryObject *LuryObject::getMethod(string name) {
-	LuryObject *method;
+LuryMethod *LuryObject::getMethod(string name) {
+	LuryMethod *method;
 
 	method = methods[name];
 	if (method == NULL) {
-		method = ((LuryClass *) klass)->getMethod(name);
+		method = klass->getMethod(name);
 	}
 	return method;
 }
 
-void LuryObject::setMethod(string name, LuryObject *method) {
+void LuryObject::setMethod(string name, LuryMethod *method) {
 	methods[name] = method;
 }
 
-LuryObject *LuryObject::getClass() {
+LuryClass *LuryObject::getClass() {
 	return klass;
 }
 
-void LuryObject::setClass(LuryObject* k) {
+void LuryObject::setClass(LuryClass* k) {
 	klass = k;
 }
 
-ASTExit LuryObject::call(string name, list<LuryObject *> args) {
-	LuryFunction *func = (LuryFunction *)getMethod(name);
+ASTExit LuryObject::send(string name, vector<LuryObject *> args) {
+	LuryMethod *method = getMethod(name);
 
-	return func->eval(LuryContext((LuryClass *)this), args);
+	return method->call(this, args);
 }
 
-string LuryObject::to_s() {
-	return "<" + ((LuryClass *)klass)->getName() + ">";
+bool LuryObject::isTrue() {
+	ASTExit e = send("true?", {});
+	LuryBoolean *obj = (LuryBoolean *)(e.getReturnValue());
+
+	return obj->isTrue();
 }
 
-LuryObject* LuryObject::luryOr(LuryObject *obj) {
-	return LuryBoolean::getInstance(this->isTrue() || obj->isTrue());
+string LuryObject::toString() {
+	ASTExit e = send("to_s", {});
+	LuryString *obj = (LuryString *)(e.getReturnValue());
+
+	return obj->getValue();
 }

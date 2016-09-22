@@ -5,87 +5,74 @@ ASTExit BinaryOpAST::eval(LuryContext *context) {
 	ASTExit rhs_exit = rhs->eval(context);
 	LuryObject *lhs_obj = lhs_exit.getReturnValue();
 	LuryObject *rhs_obj = rhs_exit.getReturnValue();
-	LuryObject *obj;
 
 	switch (op) {
 	case OpAdd:
-		obj = lhs_obj->add(rhs_obj);
-		break;
+		return lhs_obj->send("+", {rhs_obj});
 	case OpSub:
-		obj = lhs_obj->sub(rhs_obj);
-		break;
+		return lhs_obj->send("-", {rhs_obj});
 	case OpMul:
-		obj = lhs_obj->mul(rhs_obj);
-		break;
+		return lhs_obj->send("*", {rhs_obj});
 	case OpDiv:
-		obj = lhs_obj->div(rhs_obj);
-		break;
+		return lhs_obj->send("/", {rhs_obj});
 	case OpMod:
-		obj = lhs_obj->mod(rhs_obj);
-		break;
+		return lhs_obj->send("%", {rhs_obj});
 	case OpEqual:
-		obj = lhs_obj->equal(rhs_obj);
-		break;
+		return lhs_obj->send("==", {rhs_obj});
 	case OpNotEqual:
-		obj = lhs_obj->notEqual(rhs_obj);
-		break;
+		return lhs_obj->send("!=", {rhs_obj});
 	case OpLess:
-		obj = lhs_obj->less(rhs_obj);
-		break;
+		return lhs_obj->send("<", {rhs_obj});
 	case OpLessOrEqual:
-		obj = lhs_obj->lessOrEqual(rhs_obj);
-		break;
+		return lhs_obj->send("<=", {rhs_obj});
 	case OpGreater:
-		obj = lhs_obj->greater(rhs_obj);
-		break;
+		return lhs_obj->send(">", {rhs_obj});
 	case OpGreaterOrEqual:
-		obj = lhs_obj->greaterOrEqual(rhs_obj);
-		break;
-	case OpOr:
-		obj = lhs_obj->luryOr(rhs_obj);
-		break;
+		return lhs_obj->send(">=", {rhs_obj});
+	// case OpOr:
+	// 	obj = lhs_obj->luryOr(rhs_obj);
+	// 	break;
 	default:
 		throw "not support this operation";
 	}
-
-	ASTExit ast_exit(obj, NomalExit);
-	return ast_exit;
 }
 
 ASTExit BinaryAssignAST::eval(LuryContext *context) {
-	if (lhs->getValueID() != IdentifierID) {
-		throw "lhs is not identifier";
-	}
+	throw "not impliment BinaryAssignAST::eval";
 
-	IdentifierAST *ident = (IdentifierAST *)lhs;
-	ASTExit rhs_exit = rhs->eval(context);
-	LuryObject *obj, *ret;
-	ret = rhs_exit.getReturnValue();
-	switch (op) {
-	case OpEqual:
-		break;
-	case OpAdd:
-		obj = context->get(ident->getValue());
-		ret = obj->add(ret);
-		break;
-	case OpSub:
-		obj = context->get(ident->getValue());
-		ret = obj->sub(ret);
-		break;
-	case OpMul:
-		obj = context->get(ident->getValue());
-		ret = obj->mul(ret);
-		break;
-	case OpDiv:
-		obj = context->get(ident->getValue());
-		ret = obj->div(ret);
-		break;
-	default:
-		throw "not support operater";
-	}
-	context->set(ident->getValue(), ret);
-	ASTExit ast_exit(ret, NomalExit);
-	return ast_exit;
+	// if (lhs->getValueID() != IdentifierID) {
+	// 	throw "lhs is not identifier";
+	// }
+
+	// IdentifierAST *ident = (IdentifierAST *)lhs;
+	// ASTExit rhs_exit = rhs->eval(context);
+	// LuryObject *obj, *ret;
+	// ret = rhs_exit.getReturnValue();
+	// switch (op) {
+	// case OpEqual:
+	// 	break;
+	// case OpAdd:
+	// 	obj = context->get(ident->getValue());
+	// 	ret = obj->add(ret);
+	// 	break;
+	// case OpSub:
+	// 	obj = context->get(ident->getValue());
+	// 	ret = obj->sub(ret);
+	// 	break;
+	// case OpMul:
+	// 	obj = context->get(ident->getValue());
+	// 	ret = obj->mul(ret);
+	// 	break;
+	// case OpDiv:
+	// 	obj = context->get(ident->getValue());
+	// 	ret = obj->div(ret);
+	// 	break;
+	// default:
+	// 	throw "not support operater";
+	// }
+	// context->set(ident->getValue(), ret);
+	// ASTExit ast_exit(ret, NomalExit);
+	// return ast_exit;
 }
 
 ASTExit IfStatementAST::eval(LuryContext *context) {
@@ -135,7 +122,7 @@ ASTExit IdentifierAST::eval(LuryContext *context) {
 }
 
 ASTExit FunctionStatementAST::eval(LuryContext *context) {
-	context->setMethod(name, new LuryFunction(params, proc));
+	context->setMethod(name, new LuryUserMethod(proc, params));
 	return ASTExit(LuryBoolean::getInstance(true), NomalExit);
 }
 
@@ -154,43 +141,16 @@ ASTExit CreateInstanceAST::eval(LuryContext *context) {
 }
 
 ASTExit CallAST::eval(LuryContext *context) {
-	ASTExit callee_exit = callee->eval(context);
-	LuryObject *obj = callee_exit.getReturnValue();
+	string method_name = ((IdentifierAST *)callee)->getValue();
+	LuryMethod *method = context->getMethod(method_name);
+	vector<LuryObject *> fargs;
 
-	if (obj == NULL) {
-		throw "NULL";
+	for (auto itr : args) {
+		ASTExit e = itr->eval(context);
+		fargs.push_back(e.getReturnValue());
 	}
-	if (LuryFunction::classof(obj)) {
-		LuryFunction *func = (LuryFunction *) obj;
-		LuryContext func_context(context->getObject());
-		list<LuryObject *> fargs;
 
-		for (auto itr : args) {
-			ASTExit e = itr->eval(context);
-			fargs.push_back(e.getReturnValue());
-		}
-		return func->eval(func_context, fargs);
-	}
-	// else if (LuryLambda::classof(obj)) {
-	// 	LuryLambda *func = (LuryLambda *) obj;
-	// 	LuryContext *func_context = context->copy();
-
-	// 	AST *proc = func->getProc();
-	// 	list<string> params = func->getParams();
-
-	// 	auto params_itr = params.begin();
-	// 	auto args_itr = args.begin();
-	// 	while (args_itr != args.end()) {
-	// 		ASTExit arg_exit = (*args_itr)->eval(context);
-	// 		func_context->set(*params_itr, arg_exit.getReturnValue());
-	// 		params_itr++;
-	// 		args_itr++;
-	// 	}
-
-	// 	return proc->eval(func_context);
-	// }
-
-	throw "this object is not function";
+	return method->call(context->getObject(), fargs);
 }
 
 ASTExit ReturnStatementAST::eval(LuryContext *context) {

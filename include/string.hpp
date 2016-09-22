@@ -1,7 +1,7 @@
 #pragma once
 
-#include "object.hpp"
-#include "class.hpp"
+#include "include/object.hpp"
+#include "include/class.hpp"
 
 using namespace std;
 
@@ -15,4 +15,8 @@ public:
 	LuryString(string value);
 
 	static void init();
+	string const getValue() { return value; }
+
+	LuryObject *constructor(vector<LuryObject *> args);
+	LuryObject *to_s(vector<LuryObject *> args);
 };

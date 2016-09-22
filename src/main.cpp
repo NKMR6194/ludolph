@@ -1,10 +1,10 @@
 #include <iostream>
-#include "../include/lury.hpp"
+#include "include/lury.hpp"
 
 using namespace std;
 
-LuryObject *lury_puts(LuryObject *obj, list<LuryObject *> args) {
-	cout << args.front()->to_s() << endl;
+LuryObject *lury_puts(LuryObject *obj, vector<LuryObject *> args) {
+	cout << args.front()->toString() << endl;
 	return LuryNil::getInstance();
 }
 
@@ -19,11 +19,11 @@ int main (int argc, char* argv[]) {
 
 	luryInit();
 
-	file_path = string(argv[1]);
+	file_path = argv[1];
 	if (drive.parse_file(file_path)) {
 		LuryObject mother(CLASS_OBJ_OBJECT);
 		LuryContext *context = new LuryContext(&mother);
-		context->setMethod("puts", new LuryFunction(lury_puts));
+		context->setMethod("puts", new LuryObjMethod<LuryObject>(&lury_puts));
 		drive.ast->eval(context);
 	}
 

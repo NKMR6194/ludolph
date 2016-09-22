@@ -1,7 +1,9 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 #include "object.hpp"
-#include "function.hpp"
 
 using namespace std;
 
@@ -11,12 +13,15 @@ private:
 
 	const string name;
 	LuryClass *parent;
+	map<string, LuryMethod *> methods;
 
 	static map<string, LuryClass *> class_objects;
 
 public:
 
-	LuryObject *getMethod(string name);
+	LuryMethod *getMethod(string name);
+	void setMethod(string name, LuryMethod *method);
+	void setClassMethod(string name, LuryMethod *method);
 	inline const string getName() { return name; }
 
 	static void init();
@@ -27,4 +32,3 @@ public:
 
 extern LuryClass *CLASS_OBJ_OBJECT;
 extern LuryClass *CLASS_OBJ_CLASS;
-extern LuryClass *CLASS_OBJ_FUNCTION;

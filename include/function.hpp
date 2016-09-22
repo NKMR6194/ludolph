@@ -1,39 +1,53 @@
 #pragma once
 
-#include <list>
+#include <vector>
+#include <string>
+#include <functional>
 
 #include "object.hpp"
+#include "ast_exit.hpp"
 
 using namespace std;
 
-typedef function<LuryObject *(LuryObject *, list<LuryObject *>)> nfunction;
-
 class AST;
-class LuryContext;
 
-enum FunctionType {
-	Instruction,
-	NativeFunc
-};
+extern LuryClass *CLASS_OBJ_FUNCTION;
 
-class LuryFunction : public LuryObject {
-private:
-	FunctionType func_type;
-	list<string> params;
-	AST *proc;
-	nfunction nfunc;
-
+class LuryMethod : public LuryObject {
 public:
-	LuryFunction(list<string> params, AST *proc);
-	LuryFunction(nfunction nfunc);
-	~LuryFunction();
-	static inline bool classof(LuryFunction const*) { return true; }
-	static bool classof(LuryObject *object);
-
-	ASTExit eval(LuryContext context, list<LuryObject *> args);
-	inline list<string> getParams() { return params; }
-	inline AST *getProc() { return proc; }
-	inline FunctionType getFunctionType() { return func_type; }
-
+	LuryMethod() : LuryObject(CLASS_OBJ_FUNCTION) {}
+	virtual ASTExit call(LuryObject *self, vector<LuryObject *> args) {
+		throw "method error";
+	}
 	static void init();
 };
+
+template <typename T>
+class LuryObjMethod : public LuryMethod {
+private:
+	function<LuryObject*(T*, vector<LuryObject *>)> method;
+
+public:
+	LuryObjMethod(function<LuryObject*(T*, vector<LuryObject *>)> method) :
+		method(method)
+	{}
+	~LuryObjMethod() {}
+
+	ASTExit call(LuryObject *self, vector<LuryObject *> args) {
+		return ASTExit(method((T*)self, args), NomalExit);
+	}
+};
+
+class LuryUserMethod : public LuryMethod {
+private:
+	AST *proc;
+	vector<string> params;
+
+public:
+	LuryUserMethod(AST *proc, vector<string> params) : proc(proc), params(params) {}
+	~LuryUserMethod() {}
+
+	ASTExit call(LuryObject *self, vector<LuryObject *> args);
+};
+
+

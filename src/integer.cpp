@@ -1,9 +1,9 @@
 #include <cmath>
 
-#include "../include/integer.hpp"
-#include "../include/floating.hpp"
-#include "../include/complex.hpp"
-#include "../include/boolean.hpp"
+#include "include/integer.hpp"
+#include "include/function.hpp"
+#include "include/string.hpp"
+#include "include/boolean.hpp"
 
 LuryClass *CLASS_OBJ_INT;
 
@@ -11,24 +11,68 @@ LuryInteger::LuryInteger(int value) : LuryObject(CLASS_OBJ_INT), value(value) {}
 
 void LuryInteger::init() {
 	CLASS_OBJ_INT = LuryClass::createClass("Integer");
+
+	CLASS_OBJ_INT->setClassMethod("this", new LuryObjMethod<LuryInteger>(&LuryInteger::constructor));
+	CLASS_OBJ_INT->setMethod("to_s", new LuryObjMethod<LuryInteger>(&LuryInteger::to_s));
+	CLASS_OBJ_INT->setMethod("+", new LuryObjMethod<LuryInteger>(&LuryInteger::add));
+	CLASS_OBJ_INT->setMethod("-", new LuryObjMethod<LuryInteger>(&LuryInteger::sub));
+	CLASS_OBJ_INT->setMethod("==", new LuryObjMethod<LuryInteger>(&LuryInteger::equal));
+	CLASS_OBJ_INT->setMethod(">=", new LuryObjMethod<LuryInteger>(&LuryInteger::greaterOrEqual));
 }
 
-LuryObject* LuryInteger::add(LuryObject *obj) {
-	if (LuryInteger::classof(obj)) {
+LuryObject* LuryInteger::constructor(vector<LuryObject *> args) {
+	return new LuryInteger(0);
+}
+
+LuryObject* LuryInteger::add(vector<LuryObject *> args) {
+	LuryObject *obj = args[0];
+
+	if (obj->getClass() == CLASS_OBJ_INT) {
 		LuryInteger *i = (LuryInteger *)obj;
 		return new LuryInteger(value + i->value);
 	}
-	else if (LuryFloating::classof(obj)) {
-		LuryFloating *i = (LuryFloating *)obj;
-		return new LuryFloating((double)value + i->getValue());
-	}
-	else if (LuryComplex::classof(obj)) {
-		LuryComplex *i = (LuryComplex *)obj;
-		return new LuryComplex((double)value + i->getReal(), i->getImaginary());
-	}
-	throw "add not impliment other object";
+
+	throw "Type error in Integer#+";
 }
 
+LuryObject* LuryInteger::sub(vector<LuryObject *> args) {
+	LuryObject *obj = args[0];
+
+	if (obj->getClass() == CLASS_OBJ_INT) {
+		LuryInteger *i = (LuryInteger *)obj;
+		return new LuryInteger(value - i->value);
+	}
+
+	throw "Type error in Integer#-";
+}
+
+LuryObject* LuryInteger::equal(vector<LuryObject *> args) {
+	LuryObject *obj = args[0];
+
+	if (obj->getClass() == CLASS_OBJ_INT) {
+		LuryInteger *i = (LuryInteger *)obj;
+		return LuryBoolean::getInstance(value == i->value);
+	}
+
+	throw "Type error in Integer#==";
+}
+
+LuryObject* LuryInteger::greaterOrEqual(vector<LuryObject *> args) {
+	LuryObject *obj = args[0];
+
+	if (obj->getClass() == CLASS_OBJ_INT) {
+		LuryInteger *i = (LuryInteger *)obj;
+		return LuryBoolean::getInstance(value >= i->value);
+	}
+
+	throw "Type error in Integer#>=";
+}
+
+LuryObject *LuryInteger::to_s(vector<LuryObject *> args) {
+	return new LuryString(to_string(value));
+}
+
+/*
 LuryObject* LuryInteger::sub(LuryObject *obj) {
 	if (LuryInteger::classof(obj)) {
 		LuryInteger *i = (LuryInteger *)obj;
@@ -180,3 +224,4 @@ LuryObject* LuryInteger::greaterOrEqual(LuryObject *obj) {
 	}
 	throw "greaterOrEqual not impliment other object";
 }
+*/

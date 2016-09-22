@@ -2,7 +2,7 @@
 
 LuryClass *CLASS_OBJ_LAMBDA;
 
-LuryLambda::LuryLambda(list<string> params, AST *proc) :
+LuryLambda::LuryLambda(vector<string> params, AST *proc) :
 	LuryObject(CLASS_OBJ_LAMBDA), params(params), proc(proc)
 {}
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "object.hpp"
-#include "class.hpp"
+#include "include/object.hpp"
+#include "include/class.hpp"
 
 extern LuryClass *CLASS_OBJ_INT;
 
@@ -18,9 +18,18 @@ public:
 		return object->getClass() == CLASS_OBJ_INT;
 	}
 
+	/*
 	inline int getValue() { return value; }
-	string to_s() { return to_string(value); }
-	LuryObject *add(LuryObject *obj);
+	*/
+
+	LuryObject *constructor(vector<LuryObject *> args);
+	LuryObject *to_s(vector<LuryObject *> args);
+	LuryObject *add(vector<LuryObject *> args);
+	LuryObject *sub(vector<LuryObject *> args);
+	LuryObject *equal(vector<LuryObject *> args);
+	LuryObject *greaterOrEqual(vector<LuryObject *> args);
+
+	/*
 	LuryObject *sub(LuryObject *obj);
 	LuryObject *mul(LuryObject *obj);
 	LuryObject *div(LuryObject *obj);
@@ -31,4 +40,5 @@ public:
 	LuryObject *lessOrEqual(LuryObject *obj);
 	LuryObject *greater(LuryObject *obj);
 	LuryObject *greaterOrEqual(LuryObject *obj);
+	*/
 };

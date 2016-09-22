@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <list>
+#include <vector>
 
 #include "include/ast.hpp"
 
@@ -37,8 +37,8 @@
 	double double_value;
 	std::string *string_value;
 	class AST *ast;
-	std::list<std::string> *param_list;
-	list<AST *> *arg_list;
+	std::vector<std::string> *param_list;
+	vector<AST *> *arg_list;
 	int level_diff;
 }
 
@@ -47,21 +47,107 @@
 %token END 0 "end of file"
 
 /* ContextualKeyword */
-%token IdentifierGet IdentifierSet IdentifierFile IdentifierLine IdentifierExit
-%token IdentifierSuccess IdentifierFailure
+%token
+	IdentifierGet
+	IdentifierSet
+	IdentifierFile
+	IdentifierLine
+	IdentifierExit
+	IdentifierSuccess
+	IdentifierFailure
 
 /* Keyword */
-%token KeywordAbstract KeywordAnd KeywordBreak KeywordCase KeywordCatch KeywordClass
-%token KeywordContinue KeywordDef KeywordDefault KeywordDelete
-%token KeywordIf KeywordElif KeywordElse KeywordUnless
-%token KeywordEnum KeywordExtended KeywordFalse KeywordFinally KeywordFor
-%token KeywordImport KeywordIn KeywordInterface KeywordInvariant KeywordIs KeywordLazy
-%token KeywordNameof KeywordNew KeywordNil KeywordNot KeywordOr KeywordOut KeywordOverride
-%token KeywordPass KeywordPrivate KeywordProperty KeywordProtected KeywordPublic
-%token KeywordRef KeywordReflect KeywordReturn KeywordScope KeywordSealed KeywordStatic
-%token KeywordSuper KeywordSwitch KeywordThis KeywordThrow KeywordTrue KeywordTry
-%token KeywordUnittest KeywordUntil KeywordVar KeywordWhile KeywordWith
-%token KeywordYield
+%token
+	KeywordAbstract
+	KeywordAnd
+	KeywordBreak
+	KeywordCase
+	KeywordCatch
+	KeywordClass
+	KeywordContinue
+	KeywordDef
+	KeywordDefault
+	KeywordDelete
+	KeywordElif
+	KeywordElse
+	KeywordEnum
+	KeywordExtended
+	KeywordFalse
+	KeywordFinally
+	KeywordFor
+	KeywordIf
+	KeywordImport
+	KeywordIn
+	KeywordInterface
+	KeywordInvariant
+	KeywordIs
+	KeywordLazy
+	KeywordNameof
+	KeywordNew
+	KeywordNil
+	KeywordNot
+	KeywordOr
+	KeywordOut
+	KeywordOverride
+	KeywordPass
+	KeywordPrivate
+	KeywordProperty
+	KeywordProtected
+	KeywordPublic
+	KeywordRef
+	KeywordReflect
+	KeywordReturn
+	KeywordScope
+	KeywordSealed
+	KeywordStatic
+	KeywordSuper
+	KeywordSwitch
+	KeywordThis
+	KeywordThrow
+	KeywordTrue
+	KeywordTry
+	KeywordUnittest
+	KeywordUnless
+	KeywordUntil
+	KeywordVar
+	KeywordWhile
+	KeywordWith
+	KeywordYield
+
+/* Operator */
+%token
+	AndShort
+	AnnotationReturn
+	AssignmentAdd
+	AssignmentAnd
+	AssignmentConcat
+	AssignmentDivide
+	AssignmentIntDivide
+	AssignmentLeftShift
+	AssignmentModulo
+	AssignmentMultiply
+	AssignmentOr
+	AssignmentPower
+	AssignmentRightShift
+	AssignmentSub
+	AssignmentXor
+	Decrement
+	Equal
+	Increment
+	IntDivide
+	IsNot
+	Lambda
+	LeftShift
+	LessThan
+	MoreThan
+	NilCoalesce
+	NotEqual
+	NotIn
+	OrShort
+	Power
+	RangeClose
+	RangeOpen
+	RightShift
 
 /* Identifier */
 %token <string_value> Identifier
@@ -73,24 +159,18 @@
 %token <int_value> Integer
 %token <string_value> StringLiteral
 
-/* Operator */
-%token RangeOpen RangeClose Increment AssignmentAdd Decrement AssignmentSub
-%token AnnotationReturn AssignmentConcat AssignmentPower Power AssignmentMultiply
-%token AssignmentIntDivide IntDivide AssignmentDivide AssignmentModulo AssignmentLeftShift
-%token LeftShift LessThan AssignmentRightShift RightShift MoreThan Equal Lambda NotEqual
-%token NotIn IsNot AndShort AssignmentAnd AssignmentXor OrShort AssignmentOr NilCoalesce
-
-%type <ast> statement statement_list multiplication_expression unary_expression
-%type <ast> power_expression addition_expression expression postfix_expression
-%type <ast> literal primary statements range_expression comparison_expression
-%type <ast> program program_lines program_line bool_not_expression bool_and_expression
+%type <ast> statement statement_list statements program_line program_lines simple_statement simple_statements multiplication_expression unary_expression
+%type <ast> power_expression addition_expression expression postfix_expression expression_statement
+%type <ast> literal primary range_expression comparison_expression
+%type <ast> program bool_not_expression bool_and_expression or_expression
 %type <ast> if_statement elif_statements else_statement suite while_statement unless_statement
-%type <ast> simple_statement simple_statements return_statement continue_statement break_statement
-%type <ast> identifier_all function_name lambda_expression lambda_body
+%type <ast> return_statement continue_statement break_statement
+%type <ast> identifier_all lambda_expression lambda_body generator_expression
 %type <ast> assignment_expression comma_expression conditional_expression bool_or_expression
-%type <ast> function_definition argument class_name class_definition pass_statement
+%type <ast> function_definition argument class_definition pass_statement
+%type <ast> xor_expression and_expression shift_expression callref_expression
 %type <param_list> parameter_list
-%type <string_value> parameter
+%type <string_value> parameter function_name class_name
 %type <arg_list> argument_list
 
 %left  ','
@@ -138,47 +218,44 @@ program
 
 program_lines
 	: program_line
+	{
+		$$ = new CompoundAST($1);
+	}
 	| program_lines program_line
 	{
-		CompoundAST *ast;
-		if ($1->getValueID() == CompoundID) {
-			ast = (CompoundAST *)$1;
-		}
-		else {
-			ast = new CompoundAST($1);
-		}
-		ast->push_back($2);
-		$$ = ast;
+		((CompoundAST *) $1)->push_back($2);
+		$$ = $1;
 	}
 
 program_line
 	: statement
 	| NewLine
 	{
-		$$ = new CompoundAST();
+		$$ = new EmptyAST();
 	}
 
 statement
 	: statement_list NewLine
-	{
-		$$ = $1;
-	}
-	| compound_statement
+	| if_statement
+	| unless_statement
+	| while_statement
+	| function_definition
+	| class_definition
 
 statement_list
 	: simple_statement
 	| simple_statement simple_statements
 	{
-		CompoundAST *ast;
-		if ($2->getValueID() == CompoundID) {
-			ast =  (CompoundAST *)$2;
-		}
-		else {
-			ast = new CompoundAST($2);
-		}
-		ast->push_front($1);
-		$$ = ast;
+		((CompoundAST *) $2)->push_front($1);
+		$$ = $2;
 	}
+
+simple_statement
+	: expression_statement
+	| return_statement
+	| break_statement
+	| continue_statement
+	| pass_statement
 
 simple_statements
 	: ';'
@@ -187,30 +264,13 @@ simple_statements
 	}
 	| ';' simple_statement
 	{
-		$$ = $2;
+		$$ = new CompoundAST($2);
 	}
 	| ';' simple_statement simple_statements
 	{
-		CompoundAST *ast;
-		if ($3->getValueID() == CompoundID) {
-			ast = (CompoundAST *)$3;
-		}
-		else {
-			ast = new CompoundAST($3);
-		}
-		ast->push_front($2);
-		$$ = ast;
+		((CompoundAST *) $3)->push_front($2);
+		$$ = $3;
 	}
-
-compound_statement
-	: if_statement
-	| unless_statement
-	| while_statement
-	// | for_statement
-	// | try_statement
-	| function_definition
-	| class_definition
-	// | unittest_statement
 
 suite
 	: statement_list NewLine
@@ -222,20 +282,15 @@ suite
 		$$ = $3;
 	}
 
-
 statements
 	: statement
+	{
+		$$ = new CompoundAST($1);
+	}
 	| statements statement
 	{
-		CompoundAST *ast;
-		if ($1->getValueID() == CompoundID) {
-			ast = (CompoundAST *)$1;
-		}
-		else {
-			ast = new CompoundAST($1);
-		}
-		ast->push_back($2);
-		$$ = ast
+		((CompoundAST *) $1)->push_back($2);
+		$$ = $1;
 	}
 
 if_statement
@@ -285,113 +340,55 @@ while_statement
 		$$ = new WhileStatementAST($2, $4, $5);
 	}
 
-// for_statement
-// 	: KeywordFor identifier_all KeywordIn expression ':' suite
-// 	| KeywordFor identifier_all KeywordIn expression ':' suite else_statement
-//
-// try_statement
-// 	: KeywordTry ':' suite catch_statement
-// 	| KeywordTry ':' suite finally_statement
-//
-// catch_statement
-// 	: KeywordCatch identifier_all KeywordCase class_name ':' suite
-// 	| KeywordCatch identifier_all KeywordCase class_name ':' suite catch_statement
-// 	| KeywordCatch identifier_all KeywordCase class_name ':' suite finally_statement
-//
-// finally_statement
-// 	: KeywordFinally ':' suite
-
 function_definition
 	: KeywordDef function_name ':' suite
 	{
-			IdentifierAST *ident = (IdentifierAST *)$2;
-			$$ = new FunctionStatementAST(ident->getValue(), new list<string>, $4);
+		$$ = new FunctionStatementAST(*$2, $4);
+		delete $2;
 	}
 	| KeywordDef function_name '(' ')' ':' suite
 	{
-			IdentifierAST *ident = (IdentifierAST *)$2;
-			$$ = new FunctionStatementAST(ident->getValue(), new list<string>, $6);
+		$$ = new FunctionStatementAST(*$2, $6);
+		delete $2;
 	}
 	| KeywordDef function_name '(' parameter_list ')'':' suite
 	{
-			IdentifierAST *ident = (IdentifierAST *)$2;
-			$$ = new FunctionStatementAST(ident->getValue(), $4, $7);
+		$$ = new FunctionStatementAST(*$2, *$4, $7);
+		delete $2;
+		delete $4;
 	}
-	// | annotation_list KeywordDef function_name ':' suite
-	// | annotation_list KeywordDef function_name '(' ')' ':' suite
-	// | annotation_list KeywordDef function_name '(' parameter_list ')'':' suite
 
 function_name
-	: identifier_all
-	// | function_name '.' identifier_all
-	// | KeywordThis
-
-parameter
-	: identifier_all
+	: Identifier
 
 parameter_list
 	: parameter
 	{
-			list<string> *l = new list<string>();
-			IdentifierAST *ident = (IdentifierAST *)$1;
-			l->push_back(ident->getValue());
-			$$ = l;
+			vector<string> *list = new vector<string>();
+			list->push_back(*$1);
+			$$ = list;
+			delete $1;
 	}
 	| parameter_list ',' parameter
 	{
-			list<string> *l = $1;
-			IdentifierAST *ident = (IdentifierAST *)$3;
-			l->push_back(ident->getValue());
-			$$ = l;
+			vector<string> *list = $1;
+			list->push_back(*$3);
+			$$ = list;
+			delete $3;
 	}
+
+parameter
+	: Identifier
 
 class_definition
 	: KeywordClass class_name ':' suite
 	{
-		IdentifierAST *ident = (IdentifierAST *)$2;
-		$$ = new ClassStatementAST(ident->getValue(), $4);
+		$$ = new ClassStatementAST(*$2, $4);
+		delete $2;
 	}
-// 	| KeywordClass class_name '(' inheritance_list ')' ':' suite
-// 	| annotation_list KeywordClass class_name ':' suite
-// 	| annotation_list KeywordClass class_name '(' inheritance_list ')' ':' suite
 
 class_name
-	: identifier_all
-
-// inheritance_list
-// 	: object_name
-// 	| inheritance_list ',' object_name
-//
-// object_name
-// 	: identifier_all
-// 	| object_name '.' identifier_all
-//
-// annotation_list
-// 	: annotation
-// 	| annotation_list annotation
-//
-// annotation
-// 	: '<' annotation_params '>' NewLine
-//
-// annotation_params
-// 	: annotation_param
-// 	| annotation_params ',' annotation_param
-//
-// annotation_param
-// 	: class_name
-// 	| class_name '(' ')'
-// 	| class_name '(' argument_list ')'
-//
-// unittest_statement
-// 	: KeywordUnittest ':' suite
-
-simple_statement
-	: pass_statement
-	| expression_statement
-	| return_statement
-	| break_statement
-	| continue_statement
-	// | import_statement
+	: Identifier
 
 pass_statement
 	: KeywordPass
@@ -399,15 +396,12 @@ pass_statement
 		$$ = new NilLitAST();
 	}
 
-expression_statement
-	: expression
-
 return_statement
 	: KeywordReturn
 	{
 		$$ = new ReturnStatementAST(new NilLitAST());
 	}
-	| KeywordReturn expression
+	| KeywordReturn expression_statement
 	{
 		$$ = new ReturnStatementAST($2);
 	}
@@ -424,36 +418,14 @@ continue_statement
 		$$ = new ContinueStatementAST();
 	}
 
-// import_statement
-// 	: KeywordImport import_names
-// 	| KeywordPublic KeywordImport import_names
-//
-// import_names
-// 	: import_name
-// 	| import_names ',' import_name
-//
-// import_name
-// 	: module_name
-//
-// module_name
-// 	: identifier_all
-// 	| module_name '.' identifier_all
-
 identifier_all
 	: Identifier
 	{
 		$$ = new IdentifierAST(*$1);
 	}
-	// | contextual_keyword
 
-// contextual_keyword
-// 	: IdentifierGet
-// 	| IdentifierSet
-// 	| IdentifierFile
-// 	| IdentifierLine
-// 	| IdentifierExit
-// 	| IdentifierSuccess
-// 	| IdentifierFailure
+expression_statement
+	: expression
 
 expression
 	: assignment_expression
@@ -480,50 +452,31 @@ assignment_expression
 	{
 		$$ = new BinaryAssignAST($1, $3, OpDiv);
 	}
-	// | assignment_expression AssignmentIntDivide comma_expression
-	// | assignment_expression AssignmentPower comma_expression
-	// | assignment_expression AssignmentModulo comma_expression
-	// | assignment_expression AssignmentAnd comma_expression
-	// | assignment_expression AssignmentOr comma_expression
-	// | assignment_expression AssignmentXor comma_expression
-	// | assignment_expression AssignmentConcat comma_expression
-	// | assignment_expression AssignmentLeftShift comma_expression
-	// | assignment_expression AssignmentRightShift comma_expression
 
 comma_expression
 	: generator_expression
-	// | comma_expression ',' generator_expression
 
 generator_expression
 	: lambda_expression
-	// | lambda_expression KeywordFor identifier_all KeywordIn lambda_expression
 
 lambda_expression
 	: conditional_expression
-	| Lambda parameter '(' lambda_body ')'
-	{
-		list<string> params;
-		IdentifierAST *ident = (IdentifierAST *)$2;
-		params.push_back(ident->getValue());
-		$$ = new LambdaLitAST(params, $4);
-	}
 	| Lambda '(' lambda_body ')'
 	{
-		list<string> params;
+		vector<string> params;
 		$$ = new LambdaLitAST(params, $3);
 	}
 	| Lambda parameter_list '(' lambda_body ')'
 	{
-		list<string> params = *$2;
+		$$ = new LambdaLitAST(*$2, $4);
 		delete $2;
-		$$ = new LambdaLitAST(params, $4);
 	}
 
 lambda_body
 	: expression
 	| KeywordPass
 	{
-		$$ = NULL;
+		$$ = new EmptyAST();
 	}
 
 conditional_expression
@@ -532,8 +485,6 @@ conditional_expression
 	{
 		$$ = new IfStatementAST($1, $3, $5);
 	}
-	// | bool_or_expression KeywordIf bool_or_expression KeywordElse bool_or_expression
-	// | bool_or_expression KeywordUnless bool_or_expression KeywordElse bool_or_expression
 
 bool_or_expression
 	: bool_and_expression
@@ -585,17 +536,6 @@ comparison_expression
 	{
 		$$ = new BinaryOpAST($1, $3, OpNotEqual);
 	}
-
-// comparison_operator
-// 	: '>'
-// 	| '<'
-// 	| Equal
-// 	| LessThan
-// 	| MoreThan
-// 	| NotEqual
-// 	| KeywordIs
-// 	| IsNot
-// 	| KeywordIs KeywordNot
 
 range_expression
 	: or_expression
@@ -670,12 +610,12 @@ postfix_expression
 	// | postfix_expression Decrement
 	| KeywordNew class_name
 	{
-		IdentifierAST *ident = (IdentifierAST *)$2;
-		$$ = new CreateInstanceAST(ident->getValue());
+		$$ = new CreateInstanceAST(*$2);
+		delete $2;
 	}
 	| postfix_expression '(' ')'
 	{
-			list<AST *> empty;
+			vector<AST *> empty;
 			$$ = new CallAST($1, empty);
 	}
 	| postfix_expression '(' argument_list ')'
@@ -688,13 +628,13 @@ postfix_expression
 argument_list
 	: argument
 	{
-			list<AST *> *args = new list<AST *>();
+			vector<AST *> *args = new vector<AST *>();
 			args->push_back($1);
 			$$ = args;
 	}
 	| argument_list ',' argument
 	{
-			list<AST *> *args = $1;
+			vector<AST *> *args = $1;
 			args->push_back($3);
 			$$ = args;
 	}
@@ -721,13 +661,10 @@ primary
 	{
 		$$ = new NilLitAST();
 	}
-	// | KeywordThis
-	// | KeywordSuper
 	| '(' expression ')'
 	{
-	  $$ = $2;
+		$$ = $2;
 	}
-	// | '$'
 
 literal
 	: StringLiteral
@@ -736,61 +673,19 @@ literal
 	}
 	// | EmbedStringLiteral
 	// | WysiwygStringLiteral
-	| ImaginaryNumber
-	{
-		$$ = new ImaginaryNumberLitAST($1);
-	}
-	| FloatNumber
-	{
-		$$ = new FloatNumberLitAST($1);
-	}
+	// | ImaginaryNumber
+	// {
+	// 	$$ = new ImaginaryNumberLitAST($1);
+	// }
+	// | FloatNumber
+	// {
+	// 	$$ = new FloatNumberLitAST($1);
+	// }
 	| Integer
 	{
 		$$ = new IntegerLitAST($1);
 	}
 
-// list_literal
-// 	: '[' ']'
-// 	| '[' list_element_list ']'
-//
-// list_element_list
-// 	: list_element
-// 	| list_element_list ',' list_element
-//
-// list_element
-// 	: expression
-//
-// tuple_literal
-// 	: '(' ')'
-// 	| '(' tuple_element_list ')'
-//
-// tuple_element_list
-// 	: tuple_element
-// 	| tuple_element_list ',' tuple_element
-//
-// tuple_element
-// 	: expression
-//
-// hash_literal
-// 	: '{' '}'
-// 	| '{' hash_element_list '}'
-//
-// hash_element_list
-// 	: hash_element
-// 	| hash_element_list ',' hash_element
-//
-// hash_element
-// 	: expression ':' expression
-//
-// set_literal
-// 	: '{' set_element_list '}'
-//
-// set_element_list
-// 	: set_element
-// 	| set_element_list ',' set_element
-//
-// set_element
-// 	: expression
 %%
 
 void lury::Parser::error(const Parser::location_type& l, const std::string& m) {
